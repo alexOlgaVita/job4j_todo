@@ -4,69 +4,17 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="19687536-005e-4210-8037-7264aa32eb74" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/dbnavigator.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/checkstyle.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/db/dbchangelog.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/db/liquibase.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/db/liquibase_test.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/db/scripts/001_ddl_create_tasks_table.sql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/db/scripts/002_dml_insert_tasks.sql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/job4j/Main.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/job4j/configuration/DatasourceConfiguration.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/job4j/controller/IndexController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/job4j/controller/TaskController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/job4j/dto/TaskDto.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/job4j/mapper/TaskMapper.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/job4j/model/Task.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/job4j/service/task/SimpleTaskService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/job4j/service/task/TaskService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/job4j/store/TaskStore.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/hibernate.cfg.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/static/css/bootstrap-grid.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/static/css/bootstrap-grid.css.map" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/static/css/bootstrap-grid.min.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/static/css/bootstrap-grid.min.css.map" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/static/css/bootstrap-reboot.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/static/css/bootstrap-reboot.css.map" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/static/css/bootstrap-reboot.min.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/static/css/bootstrap-reboot.min.css.map" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/static/css/bootstrap.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/static/css/bootstrap.css.map" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/static/css/bootstrap.min.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/static/css/bootstrap.min.css.map" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/static/js/bootstrap.bundle.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/static/js/bootstrap.bundle.js.map" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/static/js/bootstrap.bundle.min.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/static/js/bootstrap.bundle.min.js.map" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/static/js/bootstrap.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/static/js/bootstrap.js.map" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/static/js/bootstrap.min.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/static/js/bootstrap.min.js.map" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/static/js/code.jquery.com_jquery-3.7.0.min.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/templates/errors/404.html" afterDir="false" />
+    <list default="true" id="19687536-005e-4210-8037-7264aa32eb74" name="Changes" comment="init, realization, tests">
+      <change afterPath="$PROJECT_DIR$/images/olga.jpg" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/main/resources/templates/fragments/1footer.html" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/main/resources/templates/fragments/1navigation.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/templates/fragments/footer.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/templates/fragments/header.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/templates/fragments/navigation.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/templates/index.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/templates/tasks/create.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/templates/tasks/list.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/templates/tasks/one.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/templates/tasks/oneEdit.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/templates/tasks/success.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/ru/job4j/controller/TasksControllerTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/ru/job4j/repository/TaskStoreTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/ru/job4j/service/task/SimpleTaskServiceTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/resources/hibernate-test.cfg.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dbnavigator.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dbnavigator.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ru/job4j/controller/TaskController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/job4j/controller/TaskController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/tasks/list.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/templates/tasks/list.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/tasks/success.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/templates/tasks/success.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/ru/job4j/controller/TasksControllerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/ru/job4j/controller/TasksControllerTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -107,7 +55,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary": "JUnit5",
     "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5": "",
-    "last_opened_file_path": "C:/projects/job4j_todo/src/test/resources",
+    "last_opened_file_path": "C:/projects/job4j_todo/images",
     "project.structure.last.edited": "Project",
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.6425287",
@@ -116,11 +64,11 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\projects\job4j_todo\images" />
       <recent name="C:\projects\job4j_todo\src\test\resources" />
       <recent name="C:\projects\job4j_todo\src\main\java\ru\job4j" />
       <recent name="C:\projects\job4j_todo\src\main\resources\templates\fragments" />
       <recent name="C:\projects\job4j_todo\src\main\resources\templates\tasks" />
-      <recent name="C:\projects\job4j_todo\db\scripts" />
     </key>
     <key name="CreateTestDialog.Recents.Supers">
       <recent name="" />
@@ -238,7 +186,20 @@
       <option name="presentableId" value="Default" />
       <updated>1739980239553</updated>
     </task>
+    <task id="LOCAL-00001" summary="init, realization, tests">
+      <option name="closed" value="true" />
+      <created>1740231440265</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1740231440265</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="init, realization, tests" />
+    <option name="LAST_COMMIT_MESSAGE" value="init, realization, tests" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -310,7 +271,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/ru/job4j/controller/TaskController.java</url>
-          <line>114</line>
+          <line>113</line>
           <option name="timeStamp" value="109" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
@@ -320,8 +281,13 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/ru/job4j/controller/TaskController.java</url>
-          <line>108</line>
+          <line>107</line>
           <option name="timeStamp" value="114" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/ru/job4j/controller/TaskController.java</url>
+          <line>43</line>
+          <option name="timeStamp" value="115" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

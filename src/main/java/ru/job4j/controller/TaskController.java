@@ -40,8 +40,7 @@ public class TaskController {
     }
 
     @GetMapping("/create")
-    public String getCreationPage(Model model) {
-        model.addAttribute("tasks", taskService.findAllNew());
+    public String getCreationPage() {
         return "tasks/create";
     }
 

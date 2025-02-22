@@ -105,7 +105,7 @@ class TasksControllerTest {
     @Test
     public void whenRequestTaskCreationPageThenGetPage() {
         var model = new ConcurrentModel();
-        var view = taskController.getCreationPage(model);
+        var view = taskController.getCreationPage();
         var actualTask = model.getAttribute("task");
         assertThat(view).isEqualTo("tasks/create");
         assertThat(actualTask).isEqualTo(null);
