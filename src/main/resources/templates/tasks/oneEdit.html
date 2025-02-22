@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="fragments/header :: header"></head>
+<body>
+<div th:replace="fragments/navigation :: navigation"></div>
+<div class="container">
+    <form class="mt-3" th:action="@{/tasks/update/{id}(id=${task.id})}" method="post" th:object="${task}"
+          enctype="multipart/form-data">
+        <input type="hidden" name="created" th:field="*{created}">
+        <input type="hidden" name="done" th:field="*{done}">
+        <div class="mb-3">
+            <label for="description" class="form-label"><b>ID</b></label>
+            <div th:text="${task.id}"></div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-9">
+                <div class="mb-3">
+                    <label for="name" class="form-label"><b>Название</b></label>
+                    <input type="text" class="form-control" id="name" name="name" th:field="*{name}"
+                           placeholder="Название задания">
+                </div>
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="description" class="form-label"><b>Описание</b></label>
+            <textarea class="form-control" id="description" name="description" th:field="*{description}" rows="15"
+                      placeholder="Опишите задание"></textarea>
+        </div>
+        <div class="mb-3">
+            <label class="form-label"><b>Создана</b></label>
+            <div th:text="${#dates.format(task.created, 'dd.MM.yyyy HH:mm:ss')}">
+            </div>
+        </div>
+        <div class="mb-3" th:switch="${task.done}">
+            <label class="form-label"><b>Готовность</b></label>
+            <label>
+                <div th:case="true">Выполнена</div>
+                <!-- * for default case -->
+                <div th:case="*">Новая</div>
+            </label>
+        </div>
+        <div class="mb-3 row">
+            <div class="col-6"></div>
+            <div class="col-6">
+                <div class="row">
+                    <div class="col-4"><a class="btn btn-light w-100" th:href="@{/tasks}">Отмена</a></div>
+                    <div class="col-4">
+                        <button class="btn btn-success w-100" type="submit">Обновить</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+</div>
+</div>
+</form>
+</div>
+<footer th:include="fragments/footer :: footer"></footer>
+</body>
+</html>
