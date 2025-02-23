@@ -25,6 +25,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 class TaskStoreTest {
 
     private static final String date1 = "2025-08-07 06:00:01";
+    private static final String date2 = "2025-09-07 06:00:01";
     private static TaskStore taskStore;
 
     @BeforeAll
@@ -33,7 +34,7 @@ class TaskStoreTest {
         SessionFactory sf;
         try {
             StandardServiceRegistry standardRegistry = new StandardServiceRegistryBuilder()
-                    .configure("hibernate-test.cfg.xml").build();
+                    .configure("hibernate.cfg.xml").build();
 
             Metadata metadata = new MetadataSources(standardRegistry)
                     .addAnnotatedClass(Task.class)
@@ -135,17 +136,52 @@ class TaskStoreTest {
 
     @Test
     public void whenDeleteByInvalidIdThenGetTrue() {
-        assertThat(taskStore.delete(0)).isTrue();
+        assertThat(taskStore.delete(0)).isFalse();
     }
 
     @Test
-    public void whenUpdateTaskIsSuccessfully() {
+    public void whenUpdateTaskWithoutCreatedDoneIsSuccessfully() {
         Task task = new Task(5, "Кино", "Сходить в кино с друзьями", Timestamp.valueOf(date1), true);
         Task taskSaved = taskStore.create(task);
         int id = taskSaved.getId();
-        Task updateIask = new Task(id, "Чай", "Купить крепкий чай", Timestamp.valueOf(date1), false);
+        Task updateIask = new Task(id, "Чай", "Купить крепкий чай", Timestamp.valueOf(date1), true);
         taskStore.update(updateIask);
         Assertions.assertThat(taskStore.findById(id)).isEqualTo(Optional.ofNullable(updateIask));
+    }
+
+    @Test
+    public void whenUpdateTaskWithOnlyDoneIsFail() {
+        Task task = new Task(5, "Кино", "Сходить в кино с друзьями", Timestamp.valueOf(date1), true);
+        Task taskSaved = taskStore.create(task);
+        int id = taskSaved.getId();
+        Task updateIask = new Task(id, "Кино", "Сходить в кино с друзьями", Timestamp.valueOf(date1), false);
+        taskStore.update(updateIask);
+        Assertions.assertThat(taskStore.findById(id)).isEqualTo(Optional.ofNullable(taskSaved));
+    }
+
+    @Test
+    public void whenUpdateTaskWithOnlyCreatedIsFail() {
+        Task task = new Task(5, "Кино", "Сходить в кино с друзьями", Timestamp.valueOf(date1), true);
+        Task taskSaved = taskStore.create(task);
+        int id = taskSaved.getId();
+        Task updateIask = new Task(id, "Кино", "Сходить в кино с друзьями", Timestamp.valueOf(date2), true);
+        taskStore.update(updateIask);
+        Assertions.assertThat(taskStore.findById(id)).isEqualTo(Optional.ofNullable(taskSaved));
+    }
+
+    @Test
+    public void whenSetDoneWhenNotDoneIsSuccessfully() {
+        Task task = new Task(5, "Кино", "Сходить в кино с друзьями", Timestamp.valueOf(date1), false);
+        Task taskSaved = taskStore.create(task);
+        Assertions.assertThat(taskStore.setDone(taskSaved.getId())).isTrue();
+    }
+
+    @Test
+    public void whenSetDoneWhenDoneIsFail() {
+        Task task = new Task(5, "Кино", "Сходить в кино с друзьями", Timestamp.valueOf(date1), true);
+        Task taskSaved = taskStore.create(task);
+        int id = taskSaved.getId();
+        Assertions.assertThat(taskStore.setDone(taskSaved.getId())).isFalse();
     }
 
     @Test
@@ -169,13 +205,13 @@ class TaskStoreTest {
     }
 
     @Test
-    public void whenUpdateTaskNotCreatedIsSuccessfully() {
+    public void whenUpdateTaskNotCreatedIsFail() {
         Task task = new Task(5, "Кино", "Сходить в кино с друзьями", Timestamp.valueOf(date1), true);
         Task taskSaved = taskStore.create(task);
         int id = taskSaved.getId();
         Task updateIask = new Task(id, "Чай", "Купить крепкий чай", null, false);
         taskStore.update(updateIask);
-        Assertions.assertThat(taskStore.findById(id)).isEqualTo(Optional.ofNullable(updateIask));
+        Assertions.assertThat(taskStore.findById(id)).isNotEqualTo(Optional.ofNullable(updateIask));
     }
 
     @Test

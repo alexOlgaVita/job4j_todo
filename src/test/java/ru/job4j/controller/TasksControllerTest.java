@@ -18,7 +18,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-import static java.time.LocalDateTime.now;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
@@ -129,14 +128,14 @@ class TasksControllerTest {
     @Test
     public void whenSomeExceptionThrownThenGetErrorPageWithMessage() {
         var expectedException = new RuntimeException("Impossible to create the task");
-        when(taskService.create(any())).thenThrow(expectedException);
+        when(taskService.create(any())).thenReturn(null);
 
         var model = new ConcurrentModel();
         var view = taskController.create(new TaskDto(), model);
-        var actualExceptionMessage = model.getAttribute("message");
+        var actualError = model.getAttribute("message");
 
         assertThat(view).isEqualTo("errors/404");
-        assertThat(actualExceptionMessage).isEqualTo(expectedException.getMessage());
+        assertThat(actualError).isEqualTo("Возникла ошибка при создании задания");
     }
 
     @Test
@@ -188,10 +187,10 @@ class TasksControllerTest {
     public void whenRequestDoDoneTaskByIdPageThenDoneAndToSuccessPage() {
         var taskDto1 = new TaskDto(1, "Кино", "Сходить в кино с друзьями", Timestamp.valueOf(date1),
                 new Date(Timestamp.valueOf(date1).getTime()), false);
-        when(taskService.update(taskDto1)).thenReturn(true);
+        when(taskService.setDone(taskDto1.getId())).thenReturn(true);
 
         var model = new ConcurrentModel();
-        var view = taskController.updateFromReadPage(taskDto1, taskDto1.getId(), model);
+        var view = taskController.setDonePage(taskDto1, taskDto1.getId(), model);
 
         assertThat(view).isEqualTo("tasks/success");
     }

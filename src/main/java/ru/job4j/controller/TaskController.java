@@ -46,19 +46,14 @@ public class TaskController {
 
     @PostMapping("/create")
     public String create(@ModelAttribute TaskDto task, Model model) {
-        try {
-            TaskDto createdTask = taskService.create(task);
-            if (createdTask == null) {
-                model.addAttribute("message", "Возникла ошибка при создании задания");
-                return "errors/404";
-            }
-            model.addAttribute("task", createdTask);
-            model.addAttribute("message", "Задание было успешно создано");
-            return "tasks/success";
-        } catch (Exception exception) {
-            model.addAttribute("message", exception.getMessage());
+        TaskDto createdTask = taskService.create(task);
+        if (createdTask == null) {
+            model.addAttribute("message", "Возникла ошибка при создании задания");
             return "errors/404";
         }
+        model.addAttribute("task", createdTask);
+        model.addAttribute("message", "Задание было успешно создано");
+        return "tasks/success";
     }
 
     @GetMapping("/{id}")
@@ -73,21 +68,16 @@ public class TaskController {
     }
 
     @PostMapping("/{id}")
-    public String updateFromReadPage(@ModelAttribute TaskDto task, @PathVariable int id, Model model) {
-        try {
-            var isUpdated = taskService.update(task);
-            if (!isUpdated) {
-                model.addAttribute("message", "При переводе в статус 'Выполнено' задания с указанным идентификатором '"
-                        + id + "' произошла ошибка");
-                return "errors/404";
-            }
-            model.addAttribute("task", task);
-            model.addAttribute("message", "Задание было успешно переведено в статус 'Выполнено'");
-            return "tasks/success";
-        } catch (Exception exception) {
-            model.addAttribute("message", exception.getMessage());
+    public String setDonePage(@ModelAttribute TaskDto task, @PathVariable int id, Model model) {
+        var isSet = taskService.setDone(id);
+        if (!isSet) {
+            model.addAttribute("message", "При переводе в статус 'Выполнено' задания с указанным идентификатором '"
+                    + id + "' произошла ошибка");
             return "errors/404";
         }
+        model.addAttribute("task", task);
+        model.addAttribute("message", "Задание было успешно переведено в статус 'Выполнено'");
+        return "tasks/success";
     }
 
     @GetMapping("/update/{id}")
@@ -103,34 +93,24 @@ public class TaskController {
 
     @PostMapping("/update/{id}")
     public String update(@ModelAttribute TaskDto task, @PathVariable int id, Model model) {
-        try {
-            var isUpdated = taskService.update(task);
-            if (!isUpdated) {
-                model.addAttribute("message", "При обновленми задания с указанным идентификатором '"
-                        + id + "' произошла ошибка");
-                return "errors/404";
-            }
-            model.addAttribute("task", task);
-            model.addAttribute("message", "Задание было успешно обновлено");
-            return "tasks/success";
-        } catch (Exception exception) {
-            model.addAttribute("message", exception.getMessage());
+        var isUpdated = taskService.update(task);
+        if (!isUpdated) {
+            model.addAttribute("message", "При обновленми задания с указанным идентификатором '"
+                    + id + "' произошла ошибка");
             return "errors/404";
         }
+        model.addAttribute("task", task);
+        model.addAttribute("message", "Задание было успешно обновлено");
+        return "tasks/success";
     }
 
     @PostMapping("/delete/{id}")
     public String delete(@ModelAttribute TaskDto task, @PathVariable int id, Model model) {
-        try {
-            var isDeleted = taskService.delete(id);
-            if (!isDeleted) {
-                model.addAttribute("message", "Задание с указанным идентификатором не найдено");
-                return "errors/404";
-            }
-            return "redirect:/tasks";
-        } catch (Exception exception) {
-            model.addAttribute("message", exception.getMessage());
+        var isDeleted = taskService.delete(id);
+        if (!isDeleted) {
+            model.addAttribute("message", "Задание с указанным идентификатором не найдено");
             return "errors/404";
         }
+        return "redirect:/tasks";
     }
 }

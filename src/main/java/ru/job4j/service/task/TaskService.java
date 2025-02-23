@@ -11,6 +11,8 @@ public interface TaskService {
 
     boolean update(TaskDto task);
 
+    boolean setDone(int id);
+
     boolean delete(int id);
 
     Collection<TaskDto> findAll();
