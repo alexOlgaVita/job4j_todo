@@ -1,8 +1,5 @@
 package ru.job4j.controller;
 
-//import jakarta.servlet.http.HttpServletRequest;
-//import jakarta.servlet.http.HttpSession;
-
 import net.jcip.annotations.ThreadSafe;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
