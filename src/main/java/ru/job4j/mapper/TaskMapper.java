@@ -4,7 +4,12 @@ import org.mapstruct.Mapper;
 import ru.job4j.dto.TaskDto;
 import ru.job4j.model.Task;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
+
+import static ru.job4j.converter.ConverterDateTime.getDate;
 
 @Mapper(componentModel = "spring")
 public interface TaskMapper {
@@ -16,7 +21,7 @@ public interface TaskMapper {
             taskDto.setName(task.getName());
             taskDto.setDescription(task.getDescription());
             taskDto.setCreated(task.getCreated());
-            taskDto.setCreateDate(new Date(task.getCreated().getTime()));
+            taskDto.setCreateDate(getDate(task.getCreated()));
             taskDto.setDone(task.isDone());
         } else {
             taskDto = null;
@@ -36,5 +41,12 @@ public interface TaskMapper {
             task = null;
         }
         return task;
+    }
+
+    private Date toDate(LocalDateTime localDateTime) {
+        var instant = Timestamp.valueOf(localDateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))).toInstant();
+        var date = Date.from(instant);
+        System.out.println(date);
+        return date;
     }
 }

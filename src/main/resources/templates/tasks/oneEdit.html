@@ -28,7 +28,7 @@
         </div>
         <div class="mb-3">
             <label class="form-label"><b>Создана</b></label>
-            <div th:text="${#dates.format(task.created, 'dd.MM.yyyy HH:mm:ss')}">
+            <div th:text="${#dates.format(task.createDate, 'dd.MM.yyyy HH:mm:ss')}">
             </div>
         </div>
         <div class="mb-3" th:switch="${task.done}">

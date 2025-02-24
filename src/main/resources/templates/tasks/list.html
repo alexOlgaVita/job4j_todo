@@ -24,7 +24,7 @@
                         </a>
                     </td>
                     <td>
-                        <a th:text="${#dates.format(task.created, 'dd.MM.yyyy HH:mm:ss')}"
+                        <a th:text="${#dates.format(task.createDate, 'dd.MM.yyyy HH:mm:ss')}"
                            th:href="@{/tasks/{id}(id=${task.id})}">
                         </a>
                     </td>

@@ -7,27 +7,27 @@ import ru.job4j.dto.TaskDto;
 import ru.job4j.mapper.TaskMapper;
 import ru.job4j.store.TaskStore;
 
-import java.sql.Timestamp;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static ru.job4j.converter.ConverterDateTime.getDate;
+import static ru.job4j.converter.ConverterDateTime.getLocalDateTimeFromString;
 
 @SpringBootTest
 class SimpleTaskServiceTest {
 
-    private static final String date1 = "2025-08-07 06:00:01";
+    private static final String date1 = "07.08.2025 06:00:01";
 
     @Autowired
     private TaskMapper taskMapper;
 
     @Test
     void whenCreateSuccessfullyWithMock() {
-        var taskDto1 = new TaskDto(5, "Кино", "Сходить в кино с друзьями", Timestamp.valueOf(date1),
-                new Date(Timestamp.valueOf(date1).getTime()), false);
+        var taskDto1 = new TaskDto(5, "Кино", "Сходить в кино с друзьями", getLocalDateTimeFromString(date1),
+                getDate(getLocalDateTimeFromString(date1)), false);
         TaskStore taskRepositoryMock = mock(TaskStore.class);
         when(taskRepositoryMock.create(taskMapper.getEntityFromModelCustom(taskDto1))).thenReturn(taskMapper.getEntityFromModelCustom(taskDto1));
         TaskService simpleTaskService = new SimpleTaskService(taskRepositoryMock, taskMapper);
@@ -37,8 +37,8 @@ class SimpleTaskServiceTest {
 
     @Test
     void whenCreateFailWithMock() {
-        var taskDto1 = new TaskDto(5, "Кино", "Сходить в кино с друзьями", Timestamp.valueOf(date1),
-                new Date(Timestamp.valueOf(date1).getTime()), false);
+        var taskDto1 = new TaskDto(5, "Кино", "Сходить в кино с друзьями", getLocalDateTimeFromString(date1),
+                getDate(getLocalDateTimeFromString(date1)), false);
         TaskStore taskRepositoryMock = mock(TaskStore.class);
         when(taskRepositoryMock.create(taskMapper.getEntityFromModelCustom(taskDto1))).thenReturn(null);
         TaskService simpleTaskService = new SimpleTaskService(taskRepositoryMock, taskMapper);
@@ -48,8 +48,8 @@ class SimpleTaskServiceTest {
 
     @Test
     void whenUpdateSuccessfullyWithMock() {
-        var taskDto1 = new TaskDto(5, "Кино", "Сходить в кино с друзьями", Timestamp.valueOf(date1),
-                new Date(Timestamp.valueOf(date1).getTime()), false);
+        var taskDto1 = new TaskDto(5, "Кино", "Сходить в кино с друзьями", getLocalDateTimeFromString(date1),
+                getDate(getLocalDateTimeFromString(date1)), false);
         TaskStore taskRepositoryMock = mock(TaskStore.class);
         when(taskRepositoryMock.update(taskMapper.getEntityFromModelCustom(taskDto1))).thenReturn(true);
         TaskService simpleTaskService = new SimpleTaskService(taskRepositoryMock, taskMapper);
@@ -58,8 +58,8 @@ class SimpleTaskServiceTest {
 
     @Test
     void whenUpdateFailWithMock() {
-        var taskDto1 = new TaskDto(5, "Кино", "Сходить в кино с друзьями", Timestamp.valueOf(date1),
-                new Date(Timestamp.valueOf(date1).getTime()), false);
+        var taskDto1 = new TaskDto(5, "Кино", "Сходить в кино с друзьями", getLocalDateTimeFromString(date1),
+                getDate(getLocalDateTimeFromString(date1)), false);
         TaskStore taskRepositoryMock = mock(TaskStore.class);
         when(taskRepositoryMock.update(taskMapper.getEntityFromModelCustom(taskDto1))).thenReturn(false);
         TaskService simpleTaskService = new SimpleTaskService(taskRepositoryMock, taskMapper);
@@ -69,8 +69,8 @@ class SimpleTaskServiceTest {
 
     @Test
     void whenFindByIdSuccessfullyWithMock() {
-        var taskDto1 = new TaskDto(5, "Кино", "Сходить в кино с друзьями", Timestamp.valueOf(date1),
-                new Date(Timestamp.valueOf(date1).getTime()), false);
+        var taskDto1 = new TaskDto(5, "Кино", "Сходить в кино с друзьями", getLocalDateTimeFromString(date1),
+                getDate(getLocalDateTimeFromString(date1)), false);
 
         TaskStore taskRepositoryMock = mock(TaskStore.class);
 
@@ -86,8 +86,8 @@ class SimpleTaskServiceTest {
 
     @Test
     void whenFindByIdFailWithMock() {
-        var taskDto1 = new TaskDto(5, "Кино", "Сходить в кино с друзьями", Timestamp.valueOf(date1),
-                new Date(Timestamp.valueOf(date1).getTime()), false);
+        var taskDto1 = new TaskDto(5, "Кино", "Сходить в кино с друзьями", getLocalDateTimeFromString(date1),
+                getDate(getLocalDateTimeFromString(date1)), false);
 
         TaskStore taskRepositoryMock = mock(TaskStore.class);
 
@@ -103,8 +103,8 @@ class SimpleTaskServiceTest {
 
     @Test
     void whenDeleteByIdSuccessfullyWithMock() {
-        var taskDto1 = new TaskDto(5, "Кино", "Сходить в кино с друзьями", Timestamp.valueOf(date1),
-                new Date(Timestamp.valueOf(date1).getTime()), false);
+        var taskDto1 = new TaskDto(5, "Кино", "Сходить в кино с друзьями", getLocalDateTimeFromString(date1),
+                getDate(getLocalDateTimeFromString(date1)), false);
 
         TaskStore taskRepositoryMock = mock(TaskStore.class);
 
@@ -115,8 +115,8 @@ class SimpleTaskServiceTest {
 
     @Test
     void whenDeleteByIdFailWithMock() {
-        var taskDto1 = new TaskDto(5, "Кино", "Сходить в кино с друзьями", Timestamp.valueOf(date1),
-                new Date(Timestamp.valueOf(date1).getTime()), false);
+        var taskDto1 = new TaskDto(5, "Кино", "Сходить в кино с друзьями", getLocalDateTimeFromString(date1),
+                getDate(getLocalDateTimeFromString(date1)), false);
 
         TaskStore taskRepositoryMock = mock(TaskStore.class);
 
@@ -127,10 +127,10 @@ class SimpleTaskServiceTest {
 
     @Test
     void whenFindAllSuccessfullyWithMock() {
-        var taskDto1 = new TaskDto(5, "Кино", "Сходить в кино с друзьями", Timestamp.valueOf(date1),
-                new Date(Timestamp.valueOf(date1).getTime()), false);
-        var taskDto2 = new TaskDto(7, "Чай", "Купить крепкий чай", Timestamp.valueOf(date1),
-                new Date(Timestamp.valueOf(date1).getTime()), false);
+        var taskDto1 = new TaskDto(5, "Кино", "Сходить в кино с друзьями", getLocalDateTimeFromString(date1),
+                getDate(getLocalDateTimeFromString(date1)), false);
+        var taskDto2 = new TaskDto(7, "Чай", "Купить крепкий чай", getLocalDateTimeFromString(date1),
+                getDate(getLocalDateTimeFromString(date1)), false);
 
         TaskStore taskRepositoryMock = mock(TaskStore.class);
 
@@ -146,11 +146,11 @@ class SimpleTaskServiceTest {
 
     @Test
     void whenFindAllFailWithMock() {
-        var taskDto1 = new TaskDto(5, "Кино", "Сходить в кино с друзьями", Timestamp.valueOf(date1),
-                new Date(Timestamp.valueOf(date1).getTime()), false);
+        var taskDto1 = new TaskDto(5, "Кино", "Сходить в кино с друзьями", getLocalDateTimeFromString(date1),
+                getDate(getLocalDateTimeFromString(date1)), false);
 
-        var taskDto2 = new TaskDto(7, "Чай", "Купить крепкий чай", Timestamp.valueOf(date1),
-                new Date(Timestamp.valueOf(date1).getTime()), false);
+        var taskDto2 = new TaskDto(7, "Чай", "Купить крепкий чай", getLocalDateTimeFromString(date1),
+                getDate(getLocalDateTimeFromString(date1)), false);
 
         TaskStore taskRepositoryMock = mock(TaskStore.class);
 
@@ -165,12 +165,12 @@ class SimpleTaskServiceTest {
 
     @Test
     void whenFindAllDoneSuccessfullyWithMock() {
-        var taskDto1 = new TaskDto(5, "Кино", "Сходить в кино с друзьями", Timestamp.valueOf(date1),
-                new Date(Timestamp.valueOf(date1).getTime()), true);
-        var taskDto2 = new TaskDto(7, "Чай", "Купить крепкий чай", Timestamp.valueOf(date1),
-                new Date(Timestamp.valueOf(date1).getTime()), false);
-        var taskDto3 = new TaskDto(1, "Английский", "Выполнить задание по английскомй", Timestamp.valueOf(date1),
-                new Date(Timestamp.valueOf(date1).getTime()), true);
+        var taskDto1 = new TaskDto(5, "Кино", "Сходить в кино с друзьями", getLocalDateTimeFromString(date1),
+                getDate(getLocalDateTimeFromString(date1)), true);
+        var taskDto2 = new TaskDto(7, "Чай", "Купить крепкий чай", getLocalDateTimeFromString(date1),
+                getDate(getLocalDateTimeFromString(date1)), false);
+        var taskDto3 = new TaskDto(1, "Английский", "Выполнить задание по английскомй", getLocalDateTimeFromString(date1),
+                getDate(getLocalDateTimeFromString(date1)), true);
 
         TaskStore taskRepositoryMock = mock(TaskStore.class);
 
@@ -186,12 +186,12 @@ class SimpleTaskServiceTest {
 
     @Test
     void whenFindAllDoneFailWithMock() {
-        var taskDto1 = new TaskDto(5, "Кино", "Сходить в кино с друзьями", Timestamp.valueOf(date1),
-                new Date(Timestamp.valueOf(date1).getTime()), false);
-        var taskDto2 = new TaskDto(7, "Чай", "Купить крепкий чай", Timestamp.valueOf(date1),
-                new Date(Timestamp.valueOf(date1).getTime()), false);
-        var taskDto3 = new TaskDto(1, "Английский", "Выполнить задание по английскомй", Timestamp.valueOf(date1),
-                new Date(Timestamp.valueOf(date1).getTime()), false);
+        var taskDto1 = new TaskDto(5, "Кино", "Сходить в кино с друзьями", getLocalDateTimeFromString(date1),
+                getDate(getLocalDateTimeFromString(date1)), false);
+        var taskDto2 = new TaskDto(7, "Чай", "Купить крепкий чай", getLocalDateTimeFromString(date1),
+                getDate(getLocalDateTimeFromString(date1)), false);
+        var taskDto3 = new TaskDto(1, "Английский", "Выполнить задание по английскомй", getLocalDateTimeFromString(date1),
+                getDate(getLocalDateTimeFromString(date1)), false);
 
         TaskStore taskRepositoryMock = mock(TaskStore.class);
 
@@ -206,12 +206,12 @@ class SimpleTaskServiceTest {
 
     @Test
     void whenFindAllNewSuccessfullyWithMock() {
-        var taskDto1 = new TaskDto(5, "Кино", "Сходить в кино с друзьями", Timestamp.valueOf(date1),
-                new Date(Timestamp.valueOf(date1).getTime()), false);
-        var taskDto2 = new TaskDto(7, "Чай", "Купить крепкий чай", Timestamp.valueOf(date1),
-                new Date(Timestamp.valueOf(date1).getTime()), true);
-        var taskDto3 = new TaskDto(1, "Английский", "Выполнить задание по английскомй", Timestamp.valueOf(date1),
-                new Date(Timestamp.valueOf(date1).getTime()), false);
+        var taskDto1 = new TaskDto(5, "Кино", "Сходить в кино с друзьями", getLocalDateTimeFromString(date1),
+                getDate(getLocalDateTimeFromString(date1)), false);
+        var taskDto2 = new TaskDto(7, "Чай", "Купить крепкий чай", getLocalDateTimeFromString(date1),
+                getDate(getLocalDateTimeFromString(date1)), true);
+        var taskDto3 = new TaskDto(1, "Английский", "Выполнить задание по английскомй", getLocalDateTimeFromString(date1),
+                getDate(getLocalDateTimeFromString(date1)), false);
 
         TaskStore taskRepositoryMock = mock(TaskStore.class);
 
@@ -227,12 +227,12 @@ class SimpleTaskServiceTest {
 
     @Test
     void whenFindAllNewFailWithMock() {
-        var taskDto1 = new TaskDto(5, "Кино", "Сходить в кино с друзьями", Timestamp.valueOf(date1),
-                new Date(Timestamp.valueOf(date1).getTime()), true);
-        var taskDto2 = new TaskDto(7, "Чай", "Купить крепкий чай", Timestamp.valueOf(date1),
-                new Date(Timestamp.valueOf(date1).getTime()), true);
-        var taskDto3 = new TaskDto(1, "Английский", "Выполнить задание по английскомй", Timestamp.valueOf(date1),
-                new Date(Timestamp.valueOf(date1).getTime()), true);
+        var taskDto1 = new TaskDto(5, "Кино", "Сходить в кино с друзьями", getLocalDateTimeFromString(date1),
+                getDate(getLocalDateTimeFromString(date1)), true);
+        var taskDto2 = new TaskDto(7, "Чай", "Купить крепкий чай", getLocalDateTimeFromString(date1),
+                getDate(getLocalDateTimeFromString(date1)), true);
+        var taskDto3 = new TaskDto(1, "Английский", "Выполнить задание по английскомй", getLocalDateTimeFromString(date1),
+                getDate(getLocalDateTimeFromString(date1)), true);
 
         TaskStore taskRepositoryMock = mock(TaskStore.class);
 
@@ -247,8 +247,8 @@ class SimpleTaskServiceTest {
 
     @Test
     void whenFindByNameSuccessfullyWithMock() {
-        var taskDto1 = new TaskDto(5, "Кино", "Сходить в кино с друзьями", Timestamp.valueOf(date1),
-                new Date(Timestamp.valueOf(date1).getTime()), false);
+        var taskDto1 = new TaskDto(5, "Кино", "Сходить в кино с друзьями", getLocalDateTimeFromString(date1),
+                getDate(getLocalDateTimeFromString(date1)), false);
 
         TaskStore taskRepositoryMock = mock(TaskStore.class);
 
@@ -264,8 +264,8 @@ class SimpleTaskServiceTest {
 
     @Test
     void whenFindByNameFailWithMock() {
-        var taskDto1 = new TaskDto(5, "Кино", "Сходить в кино с друзьями", Timestamp.valueOf(date1),
-                new Date(Timestamp.valueOf(date1).getTime()), false);
+        var taskDto1 = new TaskDto(5, "Кино", "Сходить в кино с друзьями", getLocalDateTimeFromString(date1),
+                getDate(getLocalDateTimeFromString(date1)), false);
 
         TaskStore taskRepositoryMock = mock(TaskStore.class);
 

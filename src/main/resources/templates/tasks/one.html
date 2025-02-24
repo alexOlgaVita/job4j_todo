@@ -20,7 +20,7 @@
                 <td th:text="*{id}"/>
                 <td th:text="*{name}"/>
                 <td th:text="*{description}"/>
-                <td th:text="${#dates.format(task.created, 'dd.MM.yyyy HH:mm:ss')}"/>
+                <td th:text="${#dates.format(task.createDate, 'dd.MM.yyyy HH:mm:ss')}"/>
                 <td>
                     <label>
                         <input type="checkbox" disabled th:checked="*{done}"/>
@@ -39,9 +39,8 @@
                           enctype="multipart/form-data">
                         <input type="hidden" name="name" th:value="*{name}">
                         <input type="hidden" name="description" th:value="*{description}">
-                        <input type="hidden" name="created" th:value="*{created}">
+                        <input type="hidden" name="created" th:field="*{created}">
                         <input type="hidden" name="done" th:value="true">
-                        <input type="hidden" name="didDone" th:value="true">
                         <div th:switch="${task.done}">
                             <button type="submit" name="submit" value="Submit" w-100
                                     class="btn btn-success.disabled w-100" disabled th:case="true">

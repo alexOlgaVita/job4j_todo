@@ -53,33 +53,20 @@ public class TaskStore {
     public boolean update(Task task) {
         Session session = sf.openSession();
         boolean result = false;
-        Task taskOld = findById(task.getId()).get();
-        if ((task.getName() != null && task.getDescription() != null)
-                && (!task.getName().isBlank())
-                && (!taskOld.getName().equals(task.getName()) || !taskOld.getDescription().equals(task.getDescription()))) {
-            try {
-                session.beginTransaction();
-                result = (session.createQuery(
-                                "UPDATE Task SET name = :fname, description = :fdescription "
-                                        + "WHERE id = :fId")
-                        .setParameter("fId", task.getId())
-                        .setParameter("fname", task.getName())
-                        .setParameter("fdescription", task.getDescription())
-                        .executeUpdate() > 0);
-
-                session.createQuery(
-                                "UPDATE Task SET name = :fname, description = :fdescription "
-                                        + "WHERE id = :fId")
-                        .setParameter("fId", task.getId())
-                        .setParameter("fname", task.getName())
-                        .setParameter("fdescription", task.getDescription())
-                        .executeUpdate();
-                session.getTransaction().commit();
-            } catch (Exception e) {
-                session.getTransaction().rollback();
-            } finally {
-                session.close();
-            }
+        try {
+            session.beginTransaction();
+            result = (session.createQuery(
+                            "UPDATE Task SET name = :fname, description = :fdescription "
+                                    + "WHERE id = :fId")
+                    .setParameter("fId", task.getId())
+                    .setParameter("fname", task.getName())
+                    .setParameter("fdescription", task.getDescription())
+                    .executeUpdate() > 0);
+            session.getTransaction().commit();
+        } catch (Exception e) {
+            session.getTransaction().rollback();
+        } finally {
+            session.close();
         }
         return result;
     }
@@ -92,19 +79,17 @@ public class TaskStore {
     public boolean setDone(int id) {
         Session session = sf.openSession();
         boolean result = false;
-        if (!findById(id).get().isDone()) {
-            try {
-                session.beginTransaction();
-                result = (session.createQuery(
-                                "UPDATE Task SET done = true WHERE id = :fId")
-                        .setParameter("fId", id)
-                        .executeUpdate() > 0);
-                session.getTransaction().commit();
-            } catch (Exception e) {
-                session.getTransaction().rollback();
-            } finally {
-                session.close();
-            }
+        try {
+            session.beginTransaction();
+            result = (session.createQuery(
+                            "UPDATE Task SET done = true WHERE id = :fId AND done != true")
+                    .setParameter("fId", id)
+                    .executeUpdate() > 0);
+            session.getTransaction().commit();
+        } catch (Exception e) {
+            session.getTransaction().rollback();
+        } finally {
+            session.close();
         }
         return result;
     }

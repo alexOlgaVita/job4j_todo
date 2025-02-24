@@ -6,8 +6,11 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.util.Objects;
+
+import static java.time.LocalDateTime.now;
+import static ru.job4j.converter.ConverterDateTime.FORMATTER;
 
 @Entity
 @Table(name = "tasks")
@@ -22,7 +25,7 @@ public class Task {
     private int id;
     private String name;
     private String description;
-    private Timestamp created = new Timestamp(System.currentTimeMillis());
+    private LocalDateTime created = now();
     private boolean done = false;
 
     @Override
@@ -31,20 +34,14 @@ public class Task {
                 + "id=" + id
                 + ", name='" + name + '\''
                 + ", description='" + description + '\''
-                + ", created=" + new SimpleDateFormat("MM.dd.yyyy HH:mm:ss").format(created) + '\''
+                + ", created=" + created != null ? created.format(FORMATTER) : "null" + '\''
                 + ", done=" + ((done) ? "выполнено" : "не выполнено")
                 + '}';
     }
 
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 17;
-        result = prime * result + ((name == null) ? 0 : name.hashCode());
-        result = prime * result + id;
-        result = prime * result + ((description == null) ? 0 : description.hashCode());
-        result = prime * result + ((created == null) ? 0 : created.hashCode());
-        return result;
+        return Objects.hashCode(id);
     }
 
     @Override
@@ -56,16 +53,15 @@ public class Task {
             return false;
         }
         Task task = (Task) obj;
-        return (id == task.id) && (name.equals(task.name)
-                && (description.equals(task.description)) && isSameTimeStamp(created, task.created));
+        return (id == task.id);
     }
 
-    private boolean isSameTimeStamp(Timestamp timestamp1,
-                                    Timestamp timestamp2) {
+    private boolean isSameTimeStamp(LocalDateTime localDateTime1,
+                                    LocalDateTime localDateTime2) {
         boolean result = false;
-        if (timestamp1 != null && timestamp2 != null) {
-            result = timestamp1.compareTo(timestamp2) == 0;
-        } else if (timestamp1 == null && timestamp2 == null) {
+        if (localDateTime1 != null && localDateTime2 != null) {
+            result = localDateTime1.compareTo(localDateTime2) == 0;
+        } else if (localDateTime1 == null && localDateTime2 == null) {
             result = true;
         }
         return result;

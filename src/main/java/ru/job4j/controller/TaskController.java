@@ -93,6 +93,7 @@ public class TaskController {
 
     @PostMapping("/update/{id}")
     public String update(@ModelAttribute TaskDto task, @PathVariable int id, Model model) {
+        task.setName(task.getName().trim());
         var isUpdated = taskService.update(task);
         if (!isUpdated) {
             model.addAttribute("message", "При обновленми задания с указанным идентификатором '"
