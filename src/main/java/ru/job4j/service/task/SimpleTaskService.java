@@ -17,8 +17,8 @@ public class SimpleTaskService implements TaskService {
     private final TaskStore taskRepository;
     private final TaskMapper taskMapper;
 
-    public SimpleTaskService(TaskStore sql2oTaskRepository, TaskMapper taskMapper) {
-        this.taskRepository = sql2oTaskRepository;
+    public SimpleTaskService(TaskStore taskRepository, TaskMapper taskMapper) {
+        this.taskRepository = taskRepository;
         this.taskMapper = taskMapper;
     }
 

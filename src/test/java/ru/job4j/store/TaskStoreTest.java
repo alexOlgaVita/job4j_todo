@@ -1,4 +1,4 @@
-package ru.job4j.repository;
+package ru.job4j.store;
 
 
 import org.assertj.core.api.Assertions;
@@ -12,7 +12,6 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.job4j.model.Task;
-import ru.job4j.store.TaskStore;
 
 import java.util.List;
 import java.util.Optional;

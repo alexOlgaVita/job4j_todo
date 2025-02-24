@@ -97,7 +97,7 @@ public class TaskStore {
     /**
      * Удалить задание по id.
      *
-     * @param id ID
+     * @param id
      */
     public boolean delete(int id) {
         Session session = sf.openSession();

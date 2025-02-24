@@ -55,15 +55,4 @@ public class Task {
         Task task = (Task) obj;
         return (id == task.id);
     }
-
-    private boolean isSameTimeStamp(LocalDateTime localDateTime1,
-                                    LocalDateTime localDateTime2) {
-        boolean result = false;
-        if (localDateTime1 != null && localDateTime2 != null) {
-            result = localDateTime1.compareTo(localDateTime2) == 0;
-        } else if (localDateTime1 == null && localDateTime2 == null) {
-            result = true;
-        }
-        return result;
-    }
 }
