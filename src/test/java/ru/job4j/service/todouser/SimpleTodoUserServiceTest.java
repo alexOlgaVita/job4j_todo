@@ -1,9 +1,10 @@
 package ru.job4j.service.todouser;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import ru.job4j.model.TodoUser;
-import ru.job4j.store.TodoUserStore;
+import ru.job4j.repository.TodoUserRepository;
 
 import java.util.Optional;
 
@@ -17,8 +18,8 @@ class SimpleTodoUserServiceTest {
     @Test
     void whenSaveSuccessfullyWithMock() {
         var user = new TodoUser(1, "OlgaI", "olga", "olgaPass");
-        TodoUserStore userRepositoryMock = mock(TodoUserStore.class);
-        when(userRepositoryMock.save(user)).thenReturn(Optional.of(user));
+        TodoUserRepository userRepositoryMock = mock(TodoUserRepository.class);
+        when(userRepositoryMock.save(user)).thenReturn(user);
         TodoUserService simpleUserService = new SimpleTodoUserService(userRepositoryMock);
         Optional<TodoUser> savedUser = simpleUserService.save(user);
         assertThat(savedUser.get()).isEqualTo(user);
@@ -27,8 +28,8 @@ class SimpleTodoUserServiceTest {
     @Test
     void whenSaveFailWithMock() {
         var user = new TodoUser(1, "OlgaI", "olga", "olgaPass");
-        TodoUserStore userRepositoryMock = mock(TodoUserStore.class);
-        when(userRepositoryMock.save(user)).thenReturn(Optional.empty());
+        TodoUserRepository userRepositoryMock = mock(TodoUserRepository.class);
+        when(userRepositoryMock.save(user)).thenReturn(null);
         TodoUserService simpleUserService = new SimpleTodoUserService(userRepositoryMock);
         Optional<TodoUser> savedUser = simpleUserService.save(user);
         assertThat(savedUser).isEmpty();
@@ -38,7 +39,7 @@ class SimpleTodoUserServiceTest {
     void whenFindByLoginSuccessfullyWithMock() {
         var user = new TodoUser(1, "OlgaI", "olga", "olgaPass");
 
-        TodoUserStore userRepositoryMock = mock(TodoUserStore.class);
+        TodoUserRepository userRepositoryMock = mock(TodoUserRepository.class);
         when(userRepositoryMock
                 .findByLogin(user.getLogin(), user.getPassword())).thenReturn(Optional.of(user));
 
@@ -53,7 +54,7 @@ class SimpleTodoUserServiceTest {
     void whenFindByEmailAndPasswordFailWithMock() {
         var user = new TodoUser(1, "OlgaI", "olga", "olgaPass");
 
-        TodoUserStore userRepositoryMock = mock(TodoUserStore.class);
+        TodoUserRepository userRepositoryMock = mock(TodoUserRepository.class);
         when(userRepositoryMock
                 .findByLogin(user.getLogin(), user.getPassword())).thenReturn(Optional.empty());
 

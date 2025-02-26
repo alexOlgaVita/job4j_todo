@@ -1,11 +1,12 @@
 package ru.job4j.service.task;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import ru.job4j.dto.TaskDto;
 import ru.job4j.mapper.TaskMapper;
-import ru.job4j.store.TaskStore;
+import ru.job4j.repository.TaskRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -28,7 +29,7 @@ class SimpleTaskServiceTest {
     void whenCreateSuccessfullyWithMock() {
         var taskDto1 = new TaskDto(5, "Кино", "Сходить в кино с друзьями", getLocalDateTimeFromString(date1),
                 getDate(getLocalDateTimeFromString(date1)), false);
-        TaskStore taskRepositoryMock = mock(TaskStore.class);
+        TaskRepository taskRepositoryMock = mock(TaskRepository.class);
         when(taskRepositoryMock.create(taskMapper.getEntityFromModelCustom(taskDto1))).thenReturn(taskMapper.getEntityFromModelCustom(taskDto1));
         TaskService simpleTaskService = new SimpleTaskService(taskRepositoryMock, taskMapper);
         TaskDto savedTask = simpleTaskService.create(taskDto1);
@@ -39,7 +40,7 @@ class SimpleTaskServiceTest {
     void whenCreateFailWithMock() {
         var taskDto1 = new TaskDto(5, "Кино", "Сходить в кино с друзьями", getLocalDateTimeFromString(date1),
                 getDate(getLocalDateTimeFromString(date1)), false);
-        TaskStore taskRepositoryMock = mock(TaskStore.class);
+        TaskRepository taskRepositoryMock = mock(TaskRepository.class);
         when(taskRepositoryMock.create(taskMapper.getEntityFromModelCustom(taskDto1))).thenReturn(null);
         TaskService simpleTaskService = new SimpleTaskService(taskRepositoryMock, taskMapper);
         TaskDto savedTask = simpleTaskService.create(taskDto1);
@@ -50,7 +51,7 @@ class SimpleTaskServiceTest {
     void whenUpdateSuccessfullyWithMock() {
         var taskDto1 = new TaskDto(5, "Кино", "Сходить в кино с друзьями", getLocalDateTimeFromString(date1),
                 getDate(getLocalDateTimeFromString(date1)), false);
-        TaskStore taskRepositoryMock = mock(TaskStore.class);
+        TaskRepository taskRepositoryMock = mock(TaskRepository.class);
         when(taskRepositoryMock.update(taskMapper.getEntityFromModelCustom(taskDto1))).thenReturn(true);
         TaskService simpleTaskService = new SimpleTaskService(taskRepositoryMock, taskMapper);
         assertThat(simpleTaskService.update(taskDto1)).isTrue();
@@ -60,7 +61,7 @@ class SimpleTaskServiceTest {
     void whenUpdateFailWithMock() {
         var taskDto1 = new TaskDto(5, "Кино", "Сходить в кино с друзьями", getLocalDateTimeFromString(date1),
                 getDate(getLocalDateTimeFromString(date1)), false);
-        TaskStore taskRepositoryMock = mock(TaskStore.class);
+        TaskRepository taskRepositoryMock = mock(TaskRepository.class);
         when(taskRepositoryMock.update(taskMapper.getEntityFromModelCustom(taskDto1))).thenReturn(false);
         TaskService simpleTaskService = new SimpleTaskService(taskRepositoryMock, taskMapper);
         TaskDto savedTask = simpleTaskService.create(taskDto1);
@@ -72,7 +73,7 @@ class SimpleTaskServiceTest {
         var taskDto1 = new TaskDto(5, "Кино", "Сходить в кино с друзьями", getLocalDateTimeFromString(date1),
                 getDate(getLocalDateTimeFromString(date1)), false);
 
-        TaskStore taskRepositoryMock = mock(TaskStore.class);
+        TaskRepository taskRepositoryMock = mock(TaskRepository.class);
 
         when(taskRepositoryMock
                 .findById(taskDto1.getId())).thenReturn(Optional.ofNullable(taskMapper.getEntityFromModelCustom(taskDto1)));
@@ -89,7 +90,7 @@ class SimpleTaskServiceTest {
         var taskDto1 = new TaskDto(5, "Кино", "Сходить в кино с друзьями", getLocalDateTimeFromString(date1),
                 getDate(getLocalDateTimeFromString(date1)), false);
 
-        TaskStore taskRepositoryMock = mock(TaskStore.class);
+        TaskRepository taskRepositoryMock = mock(TaskRepository.class);
 
         when(taskRepositoryMock
                 .findById(taskDto1.getId())).thenReturn(Optional.empty());
@@ -106,7 +107,7 @@ class SimpleTaskServiceTest {
         var taskDto1 = new TaskDto(5, "Кино", "Сходить в кино с друзьями", getLocalDateTimeFromString(date1),
                 getDate(getLocalDateTimeFromString(date1)), false);
 
-        TaskStore taskRepositoryMock = mock(TaskStore.class);
+        TaskRepository taskRepositoryMock = mock(TaskRepository.class);
 
         when(taskRepositoryMock.delete(taskDto1.getId())).thenReturn(true);
         TaskService simpleTaskService = new SimpleTaskService(taskRepositoryMock, taskMapper);
@@ -118,7 +119,7 @@ class SimpleTaskServiceTest {
         var taskDto1 = new TaskDto(5, "Кино", "Сходить в кино с друзьями", getLocalDateTimeFromString(date1),
                 getDate(getLocalDateTimeFromString(date1)), false);
 
-        TaskStore taskRepositoryMock = mock(TaskStore.class);
+        TaskRepository taskRepositoryMock = mock(TaskRepository.class);
 
         when(taskRepositoryMock.delete(taskDto1.getId())).thenReturn(false);
         TaskService simpleTaskService = new SimpleTaskService(taskRepositoryMock, taskMapper);
@@ -132,7 +133,7 @@ class SimpleTaskServiceTest {
         var taskDto2 = new TaskDto(7, "Чай", "Купить крепкий чай", getLocalDateTimeFromString(date1),
                 getDate(getLocalDateTimeFromString(date1)), false);
 
-        TaskStore taskRepositoryMock = mock(TaskStore.class);
+        TaskRepository taskRepositoryMock = mock(TaskRepository.class);
 
         when(taskRepositoryMock
                 .findAll()).thenReturn((List.of(taskMapper.getEntityFromModelCustom(taskDto1),
@@ -152,7 +153,7 @@ class SimpleTaskServiceTest {
         var taskDto2 = new TaskDto(7, "Чай", "Купить крепкий чай", getLocalDateTimeFromString(date1),
                 getDate(getLocalDateTimeFromString(date1)), false);
 
-        TaskStore taskRepositoryMock = mock(TaskStore.class);
+        TaskRepository taskRepositoryMock = mock(TaskRepository.class);
 
         when(taskRepositoryMock
                 .findAll()).thenReturn(null);
@@ -172,7 +173,7 @@ class SimpleTaskServiceTest {
         var taskDto3 = new TaskDto(1, "Английский", "Выполнить задание по английскомй", getLocalDateTimeFromString(date1),
                 getDate(getLocalDateTimeFromString(date1)), true);
 
-        TaskStore taskRepositoryMock = mock(TaskStore.class);
+        TaskRepository taskRepositoryMock = mock(TaskRepository.class);
 
         when(taskRepositoryMock
                 .findAllDone()).thenReturn((List.of(taskMapper.getEntityFromModelCustom(taskDto3),
@@ -193,7 +194,7 @@ class SimpleTaskServiceTest {
         var taskDto3 = new TaskDto(1, "Английский", "Выполнить задание по английскомй", getLocalDateTimeFromString(date1),
                 getDate(getLocalDateTimeFromString(date1)), false);
 
-        TaskStore taskRepositoryMock = mock(TaskStore.class);
+        TaskRepository taskRepositoryMock = mock(TaskRepository.class);
 
         when(taskRepositoryMock
                 .findAllDone()).thenReturn(null);
@@ -213,7 +214,7 @@ class SimpleTaskServiceTest {
         var taskDto3 = new TaskDto(1, "Английский", "Выполнить задание по английскомй", getLocalDateTimeFromString(date1),
                 getDate(getLocalDateTimeFromString(date1)), false);
 
-        TaskStore taskRepositoryMock = mock(TaskStore.class);
+        TaskRepository taskRepositoryMock = mock(TaskRepository.class);
 
         when(taskRepositoryMock
                 .findAllNew()).thenReturn((List.of(taskMapper.getEntityFromModelCustom(taskDto3),
@@ -234,7 +235,7 @@ class SimpleTaskServiceTest {
         var taskDto3 = new TaskDto(1, "Английский", "Выполнить задание по английскомй", getLocalDateTimeFromString(date1),
                 getDate(getLocalDateTimeFromString(date1)), true);
 
-        TaskStore taskRepositoryMock = mock(TaskStore.class);
+        TaskRepository taskRepositoryMock = mock(TaskRepository.class);
 
         when(taskRepositoryMock
                 .findAllNew()).thenReturn(null);
@@ -250,7 +251,7 @@ class SimpleTaskServiceTest {
         var taskDto1 = new TaskDto(5, "Кино", "Сходить в кино с друзьями", getLocalDateTimeFromString(date1),
                 getDate(getLocalDateTimeFromString(date1)), false);
 
-        TaskStore taskRepositoryMock = mock(TaskStore.class);
+        TaskRepository taskRepositoryMock = mock(TaskRepository.class);
 
         when(taskRepositoryMock
                 .findByName(taskDto1.getName())).thenReturn(Optional.ofNullable(taskMapper.getEntityFromModelCustom(taskDto1)));
@@ -267,7 +268,7 @@ class SimpleTaskServiceTest {
         var taskDto1 = new TaskDto(5, "Кино", "Сходить в кино с друзьями", getLocalDateTimeFromString(date1),
                 getDate(getLocalDateTimeFromString(date1)), false);
 
-        TaskStore taskRepositoryMock = mock(TaskStore.class);
+        TaskRepository taskRepositoryMock = mock(TaskRepository.class);
 
         when(taskRepositoryMock
                 .findByName(taskDto1.getName())).thenReturn(Optional.empty());

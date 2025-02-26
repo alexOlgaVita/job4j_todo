@@ -4,7 +4,7 @@ import org.springframework.stereotype.Service;
 import ru.job4j.dto.TaskDto;
 import ru.job4j.mapper.TaskMapper;
 import ru.job4j.model.Task;
-import ru.job4j.store.TaskStore;
+import ru.job4j.repository.TaskRepository;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -14,10 +14,10 @@ import java.util.Optional;
 @Service
 public class SimpleTaskService implements TaskService {
 
-    private final TaskStore taskRepository;
+    private final TaskRepository taskRepository;
     private final TaskMapper taskMapper;
 
-    public SimpleTaskService(TaskStore taskRepository, TaskMapper taskMapper) {
+    public SimpleTaskService(TaskRepository taskRepository, TaskMapper taskMapper) {
         this.taskRepository = taskRepository;
         this.taskMapper = taskMapper;
     }
