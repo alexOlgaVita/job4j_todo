@@ -17,7 +17,7 @@
                 <div class="mb-3">
                     <label for="name" class="form-label"><b>Название</b></label>
                     <input type="text" class="form-control" id="name" name="name" th:field="*{name}"
-                           placeholder="Название задания">
+                           placeholder="Название задания" required pattern="\S(.*\S)?" title="Поле 'Название задачи' должно быть заполнено без ведущих и конечных пробелов">
                 </div>
             </div>
         </div>

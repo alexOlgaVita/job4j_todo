@@ -28,16 +28,6 @@ public class TodoUserController {
 
     @PostMapping("/register")
     public String register(@ModelAttribute TodoUser todoUser, Model model) {
-            if (todoUser.getLogin().trim().isEmpty()) {
-                model.addAttribute("message", "Логин не должен быть пустым");
-                return "errors/404";
-            } else if (todoUser.getPassword().trim().isEmpty()) {
-                model.addAttribute("message", "Пароль не должен быть пустым");
-                return "errors/404";
-            } else if (todoUser.getName().trim().isEmpty()) {
-                model.addAttribute("message", "Имя не должно быть пустым");
-                return "errors/404";
-            }
         var savedUser = todoUserService.save(todoUser);
         if (savedUser.isEmpty()) {
             model.addAttribute("message", "Пользователь с таким логином уже существует");

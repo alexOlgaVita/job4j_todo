@@ -71,7 +71,7 @@ class TodoUserRepositoryTest {
     public void whenSaveThenGetSame() {
         var login = LOGIN_PASS.get(0).keySet().toArray()[0];
         var pass = LOGIN_PASS.get(0).get(login);
-        var user = todoUserRepository.save(new TodoUser(3, "Ильина Ольга", login.toString(), pass));
+        var user = todoUserRepository.save(new TodoUser(null, "Ильина Ольга", login.toString(), pass));
         var savedUser = todoUserRepository.findByLogin(user.getLogin(), user.getPassword()).get();
         Assertions.assertThat(savedUser).usingRecursiveComparison().comparingOnlyFields("name", "login", "password")
                 .isEqualTo(user);
@@ -81,15 +81,15 @@ class TodoUserRepositoryTest {
     public void whenSaveSeveralDiffloginThenGetNeed() {
         var login = LOGIN_PASS.get(0).keySet().toArray()[0];
         var pass = LOGIN_PASS.get(0).get(login);
-        var user = todoUserRepository.save(new TodoUser(1, "Ильина Ольга", login.toString(), pass));
+        var user = todoUserRepository.save(new TodoUser(null, "Ильина Ольга", login.toString(), pass));
         var savedUser = todoUserRepository.findByLogin(login.toString(), pass).get();
         var login2 = LOGIN_PASS.get(2).keySet().toArray()[0];
         var pass2 = LOGIN_PASS.get(2).get(login2);
-        var user2 = todoUserRepository.save(new TodoUser(2, "Ильина Ольга", login2.toString(), pass2));
+        var user2 = todoUserRepository.save(new TodoUser(null, "Ильина Ольга", login2.toString(), pass2));
         var savedUser2 = todoUserRepository.findByLogin(login2.toString(), pass2).get();
         var login3 = LOGIN_PASS.get(3).keySet().toArray()[0];
         var pass3 = LOGIN_PASS.get(3).get(login3);
-        var user3 = todoUserRepository.save(new TodoUser(3, "Ильина Ольга", login3.toString(), pass3));
+        var user3 = todoUserRepository.save(new TodoUser(null, "Ильина Ольга", login3.toString(), pass3));
         var savedUser3 = todoUserRepository.findByLogin(login3.toString(), pass3).get();
         Assertions.assertThat(savedUser).usingRecursiveComparison().comparingOnlyFields("name", "login", "password")
                 .isEqualTo(user);
@@ -103,14 +103,14 @@ class TodoUserRepositoryTest {
     public void whenSaveSameThenError() {
         var login1 = LOGIN_PASS.get(0).keySet().toArray()[0];
         var pass1 = LOGIN_PASS.get(0).get(login1);
-        var user1 = todoUserRepository.save(new TodoUser(0, "Ильина Ольга", login1.toString(), pass1));
+        var user1 = todoUserRepository.save(new TodoUser(null, "Ильина Ольга", login1.toString(), pass1));
         var savedUser1 = todoUserRepository.findByLogin(login1.toString(), pass1).get();
         Assertions.assertThat(savedUser1).usingRecursiveComparison().comparingOnlyFields("name", "login", "password")
                 .isEqualTo(user1);
         var login2 = LOGIN_PASS.get(1).keySet().toArray()[0];
         var pass2 = LOGIN_PASS.get(1).get(login2);
         try {
-            todoUserRepository.save(new TodoUser(0, "Ильина Ольга", login2.toString(), pass2));
+            todoUserRepository.save(new TodoUser(null, "Ильина Ольга", login2.toString(), pass2));
         } catch (PersistenceException persistenceException) {
             assertThrows(PersistenceException.class, () -> {
                 throw persistenceException;

@@ -5,7 +5,11 @@
 <div th:replace="fragments/navigation :: navigation"></div>
 <div class="container">
     <h3 class="mt-3" th:text="${message}"/>
-    <p class="text-info" th:text="'Идентификатор: ' + ${task.id}"></p>
+    <!-- p class="text-info" th:text="'Идентификатор: ' + ${task.id}"></p -->
+    <!-- Если значение есть – отобразим его. -->
+    <p class="text-info" th:if="${task.id}" th:text="'Идентификатор: ' + ${task.id}"></p>
+    <!-- Если значения нет (null), покажем текст по умолчанию. -->
+    <!--p class="text-info" th:unless="${task.id}" th:text="'Идентификатор: сгенерирован новый'"></p -->
     <p class="text-info" th:text="'Название: ' + ${task.name}"></p>
     <p class="text-info" th:text="'Описание: ' + ${task.description}"></p>
     <p class="text-info" th:text="'Дата создания: ' + ${#dates.format(task.createDate, 'dd.MM.yyyy HH:mm:ss')}"></p>

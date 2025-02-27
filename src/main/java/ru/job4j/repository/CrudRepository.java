@@ -11,21 +11,22 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 @Repository
 @AllArgsConstructor
 public class CrudRepository {
     private final SessionFactory sf;
 
-    public boolean run(Consumer<Session> command) {
-        return tx(session -> {
+    public void run(Consumer<Session> command) {
+        tx(session -> {
                     command.accept(session);
-                    return true;
+                    return null;
                 }
         );
     }
 
-    public boolean run(String query, Map<String, Object> args) {
+    public void run(String query, Map<String, Object> args) {
         Consumer<Session> command = session -> {
             var sq = session
                     .createQuery(query);
@@ -34,7 +35,7 @@ public class CrudRepository {
             }
             sq.executeUpdate();
         };
-        return run(command);
+        run(command);
     }
 
     public <T> Optional<T> optional(String query, Class<T> cl, Map<String, Object> args) {
@@ -84,5 +85,43 @@ public class CrudRepository {
         } finally {
             session.close();
         }
+    }
+
+    public <T> boolean queryBoolean(String query, Map<String, Object> args) {
+        Predicate<Session> command = session -> {
+            var sq = session
+                    .createQuery(query);
+            for (Map.Entry<String, Object> arg : args.entrySet()) {
+                sq.setParameter(arg.getKey(), arg.getValue());
+            }
+            return sq.executeUpdate() > 0;
+        };
+        return txBoolean(command);
+    }
+
+    public <T> boolean txBoolean(Predicate<Session> command) {
+        Session session = sf.openSession();
+        Transaction transaction = null;
+        try {
+            transaction = session.beginTransaction();
+            boolean rsl = command.test(session);
+            transaction.commit();
+            return rsl;
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            throw e;
+        } finally {
+            session.close();
+        }
+    }
+
+    public boolean runBoolean(Consumer<Session> command) {
+        return txBoolean(session -> {
+                    command.accept(session);
+                    return true;
+                }
+        );
     }
 }

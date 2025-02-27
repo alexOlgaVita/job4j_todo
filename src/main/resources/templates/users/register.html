@@ -11,15 +11,15 @@
     <form class="mt-3" th:action="@{/users/register}" method="post" enctype="multipart/form-data">
         <div class="mb-3">
             <label for="name" class="form-label"><b>Имя</b></label>
-            <input type="text" class="form-control" id="name" name="name" placeholder="Иван" required>
+            <input type="text" class="form-control" id="name" name="name" placeholder="Иван" required pattern="\S(.*\S)?" title="Поле 'Имя' должно быть заполнено без ведущих и конечных пробелов">
         </div>
         <div class="mb-3">
             <label for="login" class="form-label"><b>Логин</b></label>
-            <input type="login" class="form-control" id="login" name="login" placeholder="Введите login" required>
+            <input type="login" class="form-control" id="login" name="login" placeholder="Введите login" required pattern="\S(.*\S)?" title="Поле 'Логин' должно быть заполнено без ведущих и конечных пробелов">
         </div>
         <div class="mb-3">
             <label for="password" class="form-label"><b>Пароль</b></label>
-            <input type="password" class="form-control" id="password" name="password" required>
+            <input type="password" class="form-control" id="password" name="password" required pattern="\S(.*\S)?" title="Поле 'Пароль' is должно быть заполнено без ведущих и конечных пробелов">
         </div>
         <div class="mb-3 row">
             <div class="col-6"></div>

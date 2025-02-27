@@ -21,11 +21,7 @@ public class TodoUserRepository {
      * @return пользователь с id.
      */
     public TodoUser save(TodoUser user) {
-        /*
-        crudRepository.run(session -> session.persist(user));
-         */
-        crudRepository.run(session -> session.merge(user));
-        return user;
+        return crudRepository.runBoolean(session -> session.persist(user)) ? user : null;
     }
 
     /**
@@ -34,9 +30,8 @@ public class TodoUserRepository {
      * @param userId ID
      */
     public boolean delete(int userId) {
-        return crudRepository.run(
-                "DELETE TodoUser WHERE id = :fId",
-                Map.of("fId", userId)
+        return crudRepository.queryBoolean(
+                "DELETE TodoUser WHERE id = :fId", Map.of("fId", userId)
         );
     }
 
@@ -46,9 +41,8 @@ public class TodoUserRepository {
      * @param login login
      */
     public boolean deleteByLogin(String login) {
-        return crudRepository.run(
-                "DELETE TodoUser WHERE login = :fLogin",
-                Map.of("fLogin", login)
+        return crudRepository.queryBoolean(
+                "DELETE TodoUser WHERE login = :fLogin", Map.of("fLogin", login)
         );
     }
 

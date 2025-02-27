@@ -17,7 +17,7 @@ public interface TaskMapper {
     default TaskDto getModelFromEntityCustom(Task task) {
         TaskDto taskDto = new TaskDto();
         if (task != null) {
-            taskDto.setId(task.getId());
+            taskDto.setId(task.getId() == null ? 0 : task.getId());
             taskDto.setName(task.getName());
             taskDto.setDescription(task.getDescription());
             taskDto.setCreated(task.getCreated());
@@ -32,7 +32,7 @@ public interface TaskMapper {
     default Task getEntityFromModelCustom(TaskDto taskDto) {
         Task task = new Task();
         if (taskDto != null) {
-            task.setId(taskDto.getId());
+            task.setId(taskDto.getId() == 0 ? null : taskDto.getId());
             task.setName(taskDto.getName());
             task.setDescription(taskDto.getDescription());
             task.setCreated(taskDto.getCreated());

@@ -22,7 +22,8 @@ public class Task {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    @Column(name = "id")
+    public Integer id;
     private String name;
     private String description;
     private LocalDateTime created = now();
