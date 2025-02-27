@@ -1,9 +1,6 @@
 package ru.job4j.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -23,11 +20,16 @@ public class Task {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
+    @EqualsAndHashCode.Include
     public Integer id;
     private String name;
     private String description;
     private LocalDateTime created = now();
     private boolean done = false;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private TodoUser todoUser;
 
     @Override
     public String toString() {

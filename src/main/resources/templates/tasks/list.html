@@ -13,6 +13,7 @@
                     <th scope="col">Название</th>
                     <th scope="col">Дата создания</th>
                     <th scope="col">Выполнено</th>
+                    <th scope="col">Пользователь</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -32,6 +33,11 @@
                         <label>
                             <input type="checkbox" disabled th:checked="${task.done}"/>
                         </label>
+                    </td>
+                    <td>
+                        <a th:text="${task.todoUser.name}"
+                           th:href="@{/tasks/{id}(id=${task.id})}">
+                        </a>
                     </td>
                 </tr>
                 </tbody>

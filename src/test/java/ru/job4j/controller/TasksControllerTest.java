@@ -1,7 +1,6 @@
 package ru.job4j.controller;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +11,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.ui.ConcurrentModel;
 import ru.job4j.dto.TaskDto;
+import ru.job4j.model.TodoUser;
 import ru.job4j.service.task.TaskService;
 
 import java.util.List;
@@ -31,6 +31,7 @@ class TasksControllerTest {
     private static final String date1 = "07.08.2025 06:00:01";
     private static final String date2 = "07.09.2025 06:00:01";
     private static final String date3 = "12.11.2025 15:03:02";
+    private static final TodoUser user = new TodoUser(null, "Ольга", "olga", "pass");
 
     private TaskService taskService;
     private TaskController taskController;
@@ -49,9 +50,9 @@ class TasksControllerTest {
     @Test
     public void whenRequestTaskAllListPageThenGetPageWithAllTasks() {
         var taskDto1 = new TaskDto(1, "Кино", "Сходить в кино с друзьями", getLocalDateTimeFromString(date1),
-                getDate(getLocalDateTimeFromString(date1)), false);
+                getDate(getLocalDateTimeFromString(date1)), false, user);
         var taskDto2 = new TaskDto(2, "Прогулка", "Прогуляться по парку", getLocalDateTimeFromString(date2),
-                getDate(getLocalDateTimeFromString(date2)), true);
+                getDate(getLocalDateTimeFromString(date2)), true, user);
         var expectedTasks = List.of(taskDto1, taskDto2);
         when(taskService.findAll()).thenReturn(expectedTasks);
 
@@ -66,11 +67,11 @@ class TasksControllerTest {
     @Test
     public void whenRequestTaskDoneListPageThenGetPageWitDoneTasks() {
         var taskDto1 = new TaskDto(1, "Кино", "Сходить в кино с друзьями", getLocalDateTimeFromString(date1),
-                getDate(getLocalDateTimeFromString(date1)), false);
+                getDate(getLocalDateTimeFromString(date1)), false, user);
         var taskDto2 = new TaskDto(2, "Прогулка", "Прогуляться по парку", getLocalDateTimeFromString(date2),
-                getDate(getLocalDateTimeFromString(date2)), true);
+                getDate(getLocalDateTimeFromString(date2)), true, user);
         var taskDto3 = new TaskDto(2, "Бадминтон", "Поиграть с другом в бадминтон", getLocalDateTimeFromString(date3),
-                getDate(getLocalDateTimeFromString(date3)), true);
+                getDate(getLocalDateTimeFromString(date3)), true, user);
         var expectedTasks = List.of(taskDto2, taskDto3);
         when(taskService.findAllDone()).thenReturn(expectedTasks);
 
@@ -85,11 +86,11 @@ class TasksControllerTest {
     @Test
     public void whenRequestTaskNewListPageThenGetPageWitNewTasks() {
         var taskDto1 = new TaskDto(1, "Кино", "Сходить в кино с друзьями", getLocalDateTimeFromString(date1),
-                getDate(getLocalDateTimeFromString(date1)), false);
+                getDate(getLocalDateTimeFromString(date1)), false, user);
         var taskDto2 = new TaskDto(2, "Прогулка", "Прогуляться по парку", getLocalDateTimeFromString(date2),
-                getDate(getLocalDateTimeFromString(date2)), true);
+                getDate(getLocalDateTimeFromString(date2)), true, user);
         var taskDto3 = new TaskDto(2, "Бадминтон", "Поиграть с другом в бадминтон", getLocalDateTimeFromString(date3),
-                getDate(getLocalDateTimeFromString(date3)), false);
+                getDate(getLocalDateTimeFromString(date3)), false, user);
         var expectedTasks = List.of(taskDto1, taskDto3);
         when(taskService.findAllNew()).thenReturn(expectedTasks);
 
@@ -113,12 +114,12 @@ class TasksControllerTest {
     @Test
     public void whenPostTaskCreationThenSameDataAndToSuccessPage() throws Exception {
         var taskDto = new TaskDto(1, "Кино", "Сходить в кино с друзьями", getLocalDateTimeFromString(date1),
-                getDate(getLocalDateTimeFromString(date1)), false);
+                getDate(getLocalDateTimeFromString(date1)), false, user);
         var taskArgumentCaptor = ArgumentCaptor.forClass(TaskDto.class);
         when(taskService.create(taskArgumentCaptor.capture())).thenReturn(taskDto);
 
         var model = new ConcurrentModel();
-        var view = taskController.create(taskDto, model);
+        var view = taskController.create(taskDto, model, session);
         var actualTask = taskArgumentCaptor.getValue();
 
         assertThat(view).isEqualTo("tasks/success");
@@ -131,7 +132,7 @@ class TasksControllerTest {
         when(taskService.create(any())).thenReturn(null);
 
         var model = new ConcurrentModel();
-        var view = taskController.create(new TaskDto(), model);
+        var view = taskController.create(new TaskDto(), model, session);
         var actualError = model.getAttribute("message");
 
         assertThat(view).isEqualTo("errors/404");
@@ -141,7 +142,7 @@ class TasksControllerTest {
     @Test
     public void whenRequestTaskByIdPageThenGetPageWithTask() {
         var taskDto = new TaskDto(1, "Кино", "Сходить в кино с друзьями", getLocalDateTimeFromString(date1),
-                getDate(getLocalDateTimeFromString(date1)), false);
+                getDate(getLocalDateTimeFromString(date1)), false, user);
         when(taskService.findById(taskDto.getId())).thenReturn(Optional.of(taskDto));
 
         var model = new ConcurrentModel();
@@ -155,7 +156,7 @@ class TasksControllerTest {
     @Test
     public void whenPostUpdateTaskWithFileThenSameDataAndRedirectToSuccessPage() throws Exception {
         var taskDto = new TaskDto(1, "Кино", "Сходить в кино с друзьями", getLocalDateTimeFromString(date1),
-                getDate(getLocalDateTimeFromString(date1)), false);
+                getDate(getLocalDateTimeFromString(date1)), false, user);
 
         var taskArgumentCaptor = ArgumentCaptor.forClass(TaskDto.class);
         when(taskService.update(taskArgumentCaptor.capture())).thenReturn(true);
@@ -171,9 +172,9 @@ class TasksControllerTest {
     @Test
     public void whenRequestDeleteTaskByIdPageThenDeleteAndRedirectPageWithTasks() {
         var taskDto1 = new TaskDto(1, "Кино", "Сходить в кино с друзьями", getLocalDateTimeFromString(date1),
-                getDate(getLocalDateTimeFromString(date1)), false);
+                getDate(getLocalDateTimeFromString(date1)), false, user);
         var taskDto2 = new TaskDto(1, "Кино", "Сходить в кино с друзьями", getLocalDateTimeFromString(date2),
-                getDate(getLocalDateTimeFromString(date2)), false);
+                getDate(getLocalDateTimeFromString(date2)), false, user);
         when(taskService.findById(taskDto1.getId())).thenReturn(Optional.of(taskDto1));
         when(taskService.delete(taskDto1.getId())).thenReturn(true);
 
@@ -186,7 +187,7 @@ class TasksControllerTest {
     @Test
     public void whenRequestDoDoneTaskByIdPageThenDoneAndToSuccessPage() {
         var taskDto1 = new TaskDto(1, "Кино", "Сходить в кино с друзьями", getLocalDateTimeFromString(date1),
-                getDate(getLocalDateTimeFromString(date1)), false);
+                getDate(getLocalDateTimeFromString(date1)), false, user);
         when(taskService.setDone(taskDto1.getId())).thenReturn(true);
 
         var model = new ConcurrentModel();

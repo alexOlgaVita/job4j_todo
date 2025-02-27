@@ -23,6 +23,7 @@ public interface TaskMapper {
             taskDto.setCreated(task.getCreated());
             taskDto.setCreateDate(getDate(task.getCreated()));
             taskDto.setDone(task.isDone());
+            taskDto.setTodoUser(task.getTodoUser());
         } else {
             taskDto = null;
         }
@@ -37,6 +38,7 @@ public interface TaskMapper {
             task.setDescription(taskDto.getDescription());
             task.setCreated(taskDto.getCreated());
             task.setDone(taskDto.isDone());
+            task.setTodoUser(taskDto.getTodoUser());
         } else {
             task = null;
         }

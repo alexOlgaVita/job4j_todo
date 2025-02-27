@@ -8,6 +8,16 @@
           enctype="multipart/form-data">
         <input type="hidden" name="created" th:field="*{created}">
         <input type="hidden" name="done" th:field="*{done}">
+
+
+        <!--input type="hidden" name="todoUser" th:field="*{todoUser}"-->
+        <!--input type="hidden" th:attr="name='todoUser'" th:value="${task.todoUser}"-->
+        <!--input type="hidden" id="todoUser" name="todoUser" th:value="${task.todoUser}"-->
+        <input type="hidden" id="todoUser.id" name="todoUser.id" th:value="*{todoUser.id}">
+        <input type="hidden" id="todoUser.login" name="todoUser.login" th:value="*{todoUser.login}">
+        <input type="hidden" id="todoUser.name" name="todoUser.name" th:value="*{todoUser.name}">
+        <input type="hidden" id="todoUser.password" name="todoUser.password" th:value="*{todoUser.password}">
+
         <div class="mb-3">
             <label for="description" class="form-label"><b>ID</b></label>
             <div th:text="${task.id}"></div>
@@ -38,6 +48,11 @@
                 <!-- * for default case -->
                 <div th:case="*">Новая</div>
             </label>
+        </div>
+        <div class="mb-3">
+            <label class="form-label"><b>Пользователь</b></label>
+            <div th:text="${task.todoUser.name}">
+            </div>
         </div>
         <div class="mb-3 row">
             <div class="col-6"></div>

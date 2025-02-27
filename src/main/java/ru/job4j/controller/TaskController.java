@@ -5,7 +5,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.job4j.dto.TaskDto;
+import ru.job4j.model.TodoUser;
 import ru.job4j.service.task.TaskService;
+
+import javax.servlet.http.HttpSession;
 
 @ThreadSafe
 @Controller
@@ -45,7 +48,13 @@ public class TaskController {
     }
 
     @PostMapping("/create")
-    public String create(@ModelAttribute TaskDto task, Model model) {
+    public String create(@ModelAttribute TaskDto task, Model model, HttpSession session) {
+        var user = (TodoUser) session.getAttribute("user");
+        /*
+        var userId = (user != null) ? user.getId() : -1;
+        model.addAttribute("userId", userId);
+         */
+        task.setTodoUser(user);
         TaskDto createdTask = taskService.create(task);
         if (createdTask == null) {
             model.addAttribute("message", "Возникла ошибка при создании задания");
