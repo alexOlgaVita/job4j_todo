@@ -14,6 +14,7 @@
     <p class="text-info" th:text="'Описание: ' + ${task.description}"></p>
     <p class="text-info" th:text="'Дата создания: ' + ${#dates.format(task.createDate, 'dd.MM.yyyy HH:mm:ss')}"></p>
     <p class="text-info" th:text="'Пользователь: ' + ${task.todoUser.name}"></p>
+    <p class="text-info" th:text="'Приоритет: ' + ${task.priority.name}"></p>
     <div th:switch="${task.done}">
         <p class="text-info" th:case="true">Готовность: Выполнена</p>
         <!-- * for default case -->

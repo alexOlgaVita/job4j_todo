@@ -14,6 +14,7 @@
                 <th scope="col">Создано</th>
                 <th scope="col">Готовность</th>
                 <th scope="col">Пользователь</th>
+                <th scope="col">Приоритет</th>
             </tr>
             </thead>
             <tbody>
@@ -22,12 +23,13 @@
                 <td th:text="*{name}"/>
                 <td th:text="*{description}"/>
                 <td th:text="${#dates.format(task.createDate, 'dd.MM.yyyy HH:mm:ss')}"/>
-                <td th:text="*{todoUser.name}"/>
                 <td>
                     <label>
                         <input type="checkbox" disabled th:checked="*{done}"/>
                     </label>
                 </td>
+                <td th:text="*{todoUser.name}"/>
+                <td th:text="*{priority.name}"/>
             </tr>
         </table>
     </form>
@@ -48,6 +50,11 @@
                         <input type="hidden" id="todoUser.login" name="todoUser.login" th:value="*{todoUser.login}">
                         <input type="hidden" id="todoUser.name" name="todoUser.name" th:value="*{todoUser.name}">
                         <input type="hidden" id="todoUser.password" name="todoUser.password" th:value="*{todoUser.password}">
+
+                        <input type="hidden" id="priority.id" name="priority.id" th:value="*{priority.id}">
+                        <input type="hidden" id="priority.name" name="priority.name" th:value="*{priority.name}">
+                        <input type="hidden" id="priority.position" name="priority.position" th:value="*{priority.position}">
+
                         <div th:switch="${task.done}">
                             <button type="submit" name="submit" value="Submit" w-100
                                     class="btn btn-success.disabled w-100" disabled th:case="true">

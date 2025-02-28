@@ -7,6 +7,7 @@ import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.junit.jupiter.api.*;
+import ru.job4j.model.Priority;
 import ru.job4j.model.Task;
 import ru.job4j.model.TodoUser;
 
@@ -26,7 +27,9 @@ class TaskRepositoryTest {
     private static final String date2 = "07.09.2025 06:00:01";
     private static TaskRepository taskRepository;
     private static TodoUserRepository todoUserRepository;
+    private static PriorityRepository priorityRepository;
     private static TodoUser userCreated;
+    private static Priority priority;
 
     @BeforeAll
     public static void initRepositories() throws Exception {
@@ -47,14 +50,20 @@ class TaskRepositoryTest {
             throw new ExceptionInInitializerError(ex);
         }
         taskRepository = new TaskRepository(new CrudRepository(sf));
+
         todoUserRepository = new TodoUserRepository(new CrudRepository(sf));
         var user = new TodoUser(null, "Ольга", "olga", "pass");
         userCreated = todoUserRepository.save(user);
+
+        priorityRepository = new PriorityRepository(new CrudRepository(sf));
+        var priorityNew = new Priority(null, "Срочный", 1);
+        priority = priorityRepository.save(priorityNew);
     }
 
     @AfterAll
     public static void clearRepositories() throws Exception {
         todoUserRepository.deleteByLogin(userCreated.getLogin());
+        priorityRepository.deleteByName(priority.getName());
     }
 
     @AfterEach
@@ -78,7 +87,7 @@ class TaskRepositoryTest {
     @Test
     public void whenCreateThenGetSame() {
         var task = new Task(null, "Кино", "Сходить в кино с друзьями",
-                getLocalDateTimeFromString(date1), true, userCreated);
+                getLocalDateTimeFromString(date1), true, userCreated,  priority);
         var taskCreated = taskRepository.create(task);
         var createdTask = taskRepository.findByName(task.getName());
         assertThat(createdTask).usingRecursiveComparison().comparingOnlyFields("name", "description", "done")
@@ -88,11 +97,11 @@ class TaskRepositoryTest {
     @Test
     public void whenCreateSeveralThenGetAll() {
         var task1 = taskRepository.create(new Task(null, "Кино", "Сходить в кино с друзьями",
-                getLocalDateTimeFromString(date1), true, userCreated));
+                getLocalDateTimeFromString(date1), true, userCreated,  priority));
         var task2 = taskRepository.create(new Task(null, "Чай", "Купить крепкий чай",
-                getLocalDateTimeFromString(date1), true, userCreated));
+                getLocalDateTimeFromString(date1), true, userCreated,  priority));
         var task3 = taskRepository.create(new Task(null, "Английский", "Выполнить задание по английскомй",
-                getLocalDateTimeFromString(date1), true, userCreated));
+                getLocalDateTimeFromString(date1), true, userCreated,  priority));
         var result = taskRepository.findAll();
         assertThat(result).usingRecursiveComparison().comparingOnlyFields("name", "description", "done")
                 .isEqualTo(List.of(task1, task2, task3));
@@ -101,11 +110,11 @@ class TaskRepositoryTest {
     @Test
     public void whenCreateSeveralThenGetAllDone() {
         var task1 = taskRepository.create(new Task(null, "Кино", "Сходить в кино с друзьями",
-                getLocalDateTimeFromString(date1), true, userCreated));
+                getLocalDateTimeFromString(date1), true, userCreated,  priority));
         var task2 = taskRepository.create(new Task(null, "Чай", "Купить крепкий чай",
-                getLocalDateTimeFromString(date1), false, userCreated));
+                getLocalDateTimeFromString(date1), false, userCreated,  priority));
         var task3 = taskRepository.create(new Task(null, "Английский", "Выполнить задание по английскомй",
-                getLocalDateTimeFromString(date1), true, userCreated));
+                getLocalDateTimeFromString(date1), true, userCreated,  priority));
         var result = taskRepository.findAllDone();
         assertThat(result).usingRecursiveComparison().comparingOnlyFields("name", "description", "done")
                 .isEqualTo(List.of(task1, task3));
@@ -114,11 +123,11 @@ class TaskRepositoryTest {
     @Test
     public void whenCreateSeveralThenGetAllNew() {
         var task1 = taskRepository.create(new Task(null, "Кино", "Сходить в кино с друзьями",
-                getLocalDateTimeFromString(date1), false, userCreated));
+                getLocalDateTimeFromString(date1), false, userCreated,  priority));
         var task2 = taskRepository.create(new Task(null, "Чай", "Купить крепкий чай",
-                getLocalDateTimeFromString(date1), true, userCreated));
+                getLocalDateTimeFromString(date1), true, userCreated,  priority));
         var task3 = taskRepository.create(new Task(null, "Английский", "Выполнить задание по английскомй",
-                getLocalDateTimeFromString(date1), false, userCreated));
+                getLocalDateTimeFromString(date1), false, userCreated,  priority));
         var result = taskRepository.findAllNew();
         assertThat(result).usingRecursiveComparison().comparingOnlyFields("name", "description", "done")
                 .isEqualTo(List.of(task1, task3));
@@ -127,11 +136,11 @@ class TaskRepositoryTest {
     @Test
     public void whenTestFindByNameIsSuchTask() {
         var task1 = taskRepository.create(new Task(null, "Кино", "Сходить в кино с друзьями",
-                getLocalDateTimeFromString(date1), false, userCreated));
+                getLocalDateTimeFromString(date1), false, userCreated,  priority));
         var task2 = taskRepository.create(new Task(null, "Чай", "Купить крепкий чай",
-                getLocalDateTimeFromString(date1), true, userCreated));
+                getLocalDateTimeFromString(date1), true, userCreated,  priority));
         var task3 = taskRepository.create(new Task(null, "Английский", "Выполнить задание по английскомй",
-                getLocalDateTimeFromString(date1), false, userCreated));
+                getLocalDateTimeFromString(date1), false, userCreated,  priority));
         var result = taskRepository.findByName(task2.getName());
         assertThat(result).usingRecursiveComparison().comparingOnlyFields("name", "description", "done")
                 .isEqualTo(Optional.ofNullable(task2));
@@ -140,11 +149,11 @@ class TaskRepositoryTest {
     @Test
     public void whenTestFindByNameIsNotSuchTask() {
         var task1 = taskRepository.create(new Task(null, "Кино", "Сходить в кино с друзьями",
-                getLocalDateTimeFromString(date1), false, userCreated));
+                getLocalDateTimeFromString(date1), false, userCreated,  priority));
         var task2 = taskRepository.create(new Task(null, "Чай", "Купить крепкий чай",
-                getLocalDateTimeFromString(date1), true, userCreated));
+                getLocalDateTimeFromString(date1), true, userCreated,  priority));
         var task3 = taskRepository.create(new Task(null, "Английский", "Выполнить задание по английскомй",
-                getLocalDateTimeFromString(date1), false, userCreated));
+                getLocalDateTimeFromString(date1), false, userCreated,  priority));
         var result = taskRepository.findByName("Отпуск");
         assertThat(result).isEqualTo(Optional.empty());
     }
@@ -158,7 +167,7 @@ class TaskRepositoryTest {
     @Test
     public void whenDeleteThenGetEmptyOptional() {
         var task1 = taskRepository.create(new Task(null, "Кино", "Сходить в кино с друзьями",
-                getLocalDateTimeFromString(date1), true, userCreated));
+                getLocalDateTimeFromString(date1), true, userCreated,  priority));
         var isDeleted = taskRepository.delete(task1.getId().intValue());
         var createdTask = taskRepository.findById(task1.getId());
         assertThat(isDeleted).isTrue();
@@ -173,11 +182,11 @@ class TaskRepositoryTest {
     @Test
     public void whenUpdateTaskWithoutCreatedDoneIsSuccessfully() {
         Task task = new Task(null, "Кино", "Сходить в кино с друзьями",
-                getLocalDateTimeFromString(date1), true, userCreated);
+                getLocalDateTimeFromString(date1), true, userCreated,  priority);
         Task taskSaved = taskRepository.create(task);
         int id = taskSaved.getId();
         Task updateIask = new Task(id, "Чай", "Купить крепкий чай",
-                getLocalDateTimeFromString(date1), true, userCreated);
+                getLocalDateTimeFromString(date1), true, userCreated,  priority);
         taskRepository.update(updateIask);
         assertThat(taskRepository.findById(id)).usingRecursiveComparison().comparingOnlyFields("name", "description", "done")
                 .isEqualTo(Optional.ofNullable(updateIask));
@@ -186,10 +195,10 @@ class TaskRepositoryTest {
     @Test
     public void whenUpdateTaskWithOnlyDoneIsFail() {
         Task task = new Task(null, "Кино", "Сходить в кино с друзьями",
-                getLocalDateTimeFromString(date1), true, userCreated);
+                getLocalDateTimeFromString(date1), true, userCreated,  priority);
         Task taskSaved = taskRepository.create(task);
         Task updateIask = new Task(taskSaved.getId(), "Кино", "Сходить в кино с друзьями",
-                getLocalDateTimeFromString(date1), false, userCreated);
+                getLocalDateTimeFromString(date1), false, userCreated,  priority);
         taskRepository.update(updateIask);
         Assertions.assertThat(taskRepository.findById(taskSaved.getId())).isEqualTo(Optional.ofNullable(taskSaved));
         Assertions.assertThat(taskRepository.findById(taskSaved.getId()).get().isDone()).isEqualTo(taskSaved.isDone());
@@ -198,10 +207,10 @@ class TaskRepositoryTest {
     @Test
     public void whenUpdateTaskWithOnlyCreatedIsFail() {
         Task task = new Task(null, "Кино", "Сходить в кино с друзьями",
-                getLocalDateTimeFromString(date1), true, userCreated);
+                getLocalDateTimeFromString(date1), true, userCreated,  priority);
         Task taskSaved = taskRepository.create(task);
         Task updateIask = new Task(taskSaved.getId(), "Кино", "Сходить в кино с друзьями",
-                getLocalDateTimeFromString(date2), true, userCreated);
+                getLocalDateTimeFromString(date2), true, userCreated,  priority);
         taskRepository.update(updateIask);
         Assertions.assertThat(taskRepository.findById(taskSaved.getId())).isEqualTo(Optional.ofNullable(taskSaved));
         Assertions.assertThat(taskRepository.findById(taskSaved.getId()).get().getCreated()).isEqualTo(taskSaved.getCreated());
@@ -210,7 +219,7 @@ class TaskRepositoryTest {
     @Test
     public void whenSetDoneWhenNotDoneIsSuccessfully() {
         Task task = new Task(null, "Кино", "Сходить в кино с друзьями",
-                getLocalDateTimeFromString(date1), false, userCreated);
+                getLocalDateTimeFromString(date1), false, userCreated,  priority);
         Task taskSaved = taskRepository.create(task);
         Assertions.assertThat(taskRepository.setDone(taskSaved.getId())).isTrue();
         Assertions.assertThat(taskRepository.findById(taskSaved.getId()).get().isDone()).isTrue();
@@ -219,7 +228,7 @@ class TaskRepositoryTest {
     @Test
     public void whenSetDoneWhenDoneIsFail() {
         Task task = new Task(null, "Кино", "Сходить в кино с друзьями",
-                getLocalDateTimeFromString(date1), true, userCreated);
+                getLocalDateTimeFromString(date1), true, userCreated,  priority);
         Task taskSaved = taskRepository.create(task);
         Assertions.assertThat(taskRepository.setDone(taskSaved.getId())).isFalse();
         Assertions.assertThat(taskRepository.findById(taskSaved.getId()).get().isDone()).isTrue();
@@ -228,10 +237,10 @@ class TaskRepositoryTest {
     @Test
     public void whenUpdateTaskNotNameIsFail() {
         Task task = new Task(null, "Кино", "Сходить в кино с друзьями",
-                getLocalDateTimeFromString(date1), true, userCreated);
+                getLocalDateTimeFromString(date1), true, userCreated,  priority);
         Task taskSaved = taskRepository.create(task);
         Task updateIask = new Task(taskSaved.getId(), null, "Купить крепкий чай",
-                getLocalDateTimeFromString(date1), false, userCreated);
+                getLocalDateTimeFromString(date1), false, userCreated,  priority);
         try {
             taskRepository.update(updateIask);
         } catch (NullPointerException nullPointerException) {
@@ -249,11 +258,11 @@ class TaskRepositoryTest {
     @Test
     public void whenUpdateTaskNotDescriptionIsFail() {
         Task task = new Task(null, "Кино", "Сходить в кино с друзьями",
-                getLocalDateTimeFromString(date1), true, userCreated);
+                getLocalDateTimeFromString(date1), true, userCreated,  priority);
         Task taskSaved = taskRepository.create(task);
         int id = taskSaved.getId();
         Task updateIask = new Task(id, "Чай", null,
-                getLocalDateTimeFromString(date1), false, userCreated);
+                getLocalDateTimeFromString(date1), false, userCreated,  priority);
         try {
             taskRepository.update(updateIask);
         } catch (NullPointerException nullPointerException) {
@@ -272,10 +281,10 @@ class TaskRepositoryTest {
     @Test
     public void whenUpdateTaskNotCreatedIsFail() {
         Task task = new Task(null, "Кино", "Сходить в кино с друзьями",
-                getLocalDateTimeFromString(date1), true, userCreated);
+                getLocalDateTimeFromString(date1), true, userCreated,  priority);
         Task taskSaved = taskRepository.create(task);
         int id = taskSaved.getId();
-        Task updateIask = new Task(id, "Чай", "Купить крепкий чай", null, false, userCreated);
+        Task updateIask = new Task(id, "Чай", "Купить крепкий чай", null, false, userCreated,  priority);
         taskRepository.update(updateIask);
         var t = taskRepository.findById(taskSaved.getId());
         Assertions.assertThat(taskRepository.findById(taskSaved.getId()).get().getName()).isEqualTo(updateIask.getName());
@@ -287,7 +296,7 @@ class TaskRepositoryTest {
     @Test
     public void whenTestFindById() {
         Task task = new Task(null, "Кино", "Сходить в кино с друзьями",
-                getLocalDateTimeFromString(date1), true, userCreated);
+                getLocalDateTimeFromString(date1), true, userCreated,  priority);
         Task createdTask = taskRepository.create(task);
         Optional<Task> result = taskRepository.findById(createdTask.getId());
         Assertions.assertThat(result).usingRecursiveComparison()

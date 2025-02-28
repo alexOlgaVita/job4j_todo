@@ -34,8 +34,9 @@ public class TaskRepository {
      */
     public boolean update(Task task) {
         return crudRepository.queryBoolean(
-                "UPDATE Task SET name = :fName, description = :fDescription WHERE id = :fId",
-                Map.of("fId", task.getId(), "fName", task.getName(), "fDescription", task.getDescription()));
+                "UPDATE Task SET name = :fName, description = :fDescription, priority = :fPriority WHERE id = :fId",
+                Map.of("fId", task.getId(), "fName", task.getName(),
+                        "fDescription", task.getDescription(), "fPriority", task.getPriority()));
     }
 
     /**
@@ -63,7 +64,7 @@ public class TaskRepository {
      * @return список заданий.
      */
     public List<Task> findAll() {
-        return crudRepository.query("from Task order by id asc", Task.class);
+        return crudRepository.query("from Task f JOIN FETCH f.priority order by f.id asc", Task.class);
     }
 
     /**
@@ -72,7 +73,7 @@ public class TaskRepository {
      * @return список заданий.
      */
     public List<Task> findAllDone() {
-        return crudRepository.query("from Task where done = true order by id asc", Task.class);
+        return crudRepository.query("from Task f JOIN FETCH f.priority where f.done = true order by f.id asc", Task.class);
     }
 
     /**
@@ -81,7 +82,7 @@ public class TaskRepository {
      * @return список заданий.
      */
     public List<Task> findAllNew() {
-        return crudRepository.query("from Task where done = false order by id asc", Task.class);
+        return crudRepository.query("from Task f JOIN FETCH f.priority where f.done = false order by f.id asc", Task.class);
     }
 
     /**
@@ -91,7 +92,7 @@ public class TaskRepository {
      */
     public Optional<Task> findById(int taskId) {
         return crudRepository.optional(
-                "from Task where id = :fId", Task.class, Map.of("fId", taskId)
+                "from Task f JOIN FETCH f.priority where f.id = :fId", Task.class, Map.of("fId", taskId)
         );
     }
 
@@ -103,7 +104,7 @@ public class TaskRepository {
      */
     public Optional<Task> findByName(String name) {
         return crudRepository.optional(
-                "from Task where name = :fName", Task.class, Map.of("fName", name)
+                "from Task f JOIN FETCH f.priority where f.name = :fName", Task.class, Map.of("fName", name)
         );
     }
 }

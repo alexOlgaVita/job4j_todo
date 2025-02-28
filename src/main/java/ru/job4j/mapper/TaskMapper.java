@@ -24,6 +24,7 @@ public interface TaskMapper {
             taskDto.setCreateDate(getDate(task.getCreated()));
             taskDto.setDone(task.isDone());
             taskDto.setTodoUser(task.getTodoUser());
+            taskDto.setPriority(task.getPriority());
         } else {
             taskDto = null;
         }
@@ -39,6 +40,7 @@ public interface TaskMapper {
             task.setCreated(taskDto.getCreated());
             task.setDone(taskDto.isDone());
             task.setTodoUser(taskDto.getTodoUser());
+            task.setPriority(taskDto.getPriority());
         } else {
             task = null;
         }

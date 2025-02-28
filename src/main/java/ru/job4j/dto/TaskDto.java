@@ -2,6 +2,7 @@ package ru.job4j.dto;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ru.job4j.model.Priority;
 import ru.job4j.model.TodoUser;
 
 import java.time.LocalDateTime;
@@ -20,9 +21,10 @@ public class TaskDto {
     private LocalDateTime created = now();
     private Date createDate = new Date(System.currentTimeMillis());
     private TodoUser todoUser;
+    private Priority priority;
 
     public TaskDto(int id, String name, String description, LocalDateTime created, Date createDate,
-                   boolean done, TodoUser todoUser) {
+                   boolean done, TodoUser todoUser, Priority priority) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -30,5 +32,6 @@ public class TaskDto {
         this.createDate = createDate;
         this.done = done;
         this.todoUser = todoUser;
+        this.priority = priority;
     }
 }

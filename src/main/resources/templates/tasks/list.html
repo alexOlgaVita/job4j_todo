@@ -14,6 +14,7 @@
                     <th scope="col">Дата создания</th>
                     <th scope="col">Выполнено</th>
                     <th scope="col">Пользователь</th>
+                    <th scope="col">Приоритет</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -36,6 +37,11 @@
                     </td>
                     <td>
                         <a th:text="${task.todoUser.name}"
+                           th:href="@{/tasks/{id}(id=${task.id})}">
+                        </a>
+                    </td>
+                    <td>
+                        <a th:text="${task.priority.name}"
                            th:href="@{/tasks/{id}(id=${task.id})}">
                         </a>
                     </td>

@@ -6,6 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.job4j.dto.TaskDto;
 import ru.job4j.model.TodoUser;
+import ru.job4j.service.priority.PriorityService;
 import ru.job4j.service.task.TaskService;
 
 import javax.servlet.http.HttpSession;
@@ -16,9 +17,12 @@ import javax.servlet.http.HttpSession;
 public class TaskController {
 
     private final TaskService taskService;
+    private final PriorityService priorityService;
 
-    public TaskController(TaskService taskService) {
+    public TaskController(TaskService taskService, PriorityService priorityService) {
+
         this.taskService = taskService;
+        this.priorityService = priorityService;
     }
 
     @GetMapping
@@ -43,18 +47,17 @@ public class TaskController {
     }
 
     @GetMapping("/create")
-    public String getCreationPage() {
+    public String getCreationPage(Model model) {
+        model.addAttribute("priorities", priorityService.findAll());
         return "tasks/create";
     }
 
     @PostMapping("/create")
     public String create(@ModelAttribute TaskDto task, Model model, HttpSession session) {
         var user = (TodoUser) session.getAttribute("user");
-        /*
-        var userId = (user != null) ? user.getId() : -1;
-        model.addAttribute("userId", userId);
-         */
         task.setTodoUser(user);
+        task.setPriority((task == null || task.getPriority() == null || task.getPriority().getName() == null)
+                ? null : priorityService.findById(task.getPriority().getId()).get());
         TaskDto createdTask = taskService.create(task);
         if (createdTask == null) {
             model.addAttribute("message", "Возникла ошибка при создании задания");
@@ -96,6 +99,7 @@ public class TaskController {
             model.addAttribute("message", "Задание с указанным идентификатором не найдено");
             return "errors/404";
         }
+        model.addAttribute("priorities", priorityService.findAll());
         model.addAttribute("task", taskOptional.get());
         return "tasks/oneEdit";
     }
@@ -103,6 +107,8 @@ public class TaskController {
     @PostMapping("/update/{id}")
     public String update(@ModelAttribute TaskDto task, @PathVariable int id, Model model) {
         task.setName(task.getName().trim());
+        task.setPriority((task == null || task.getPriority() == null || task.getPriority().getName() == null)
+                ? null : priorityService.findById(task.getPriority().getId()).get());
         var isUpdated = taskService.update(task);
         if (!isUpdated) {
             model.addAttribute("message", "При обновленми задания с указанным идентификатором '"
