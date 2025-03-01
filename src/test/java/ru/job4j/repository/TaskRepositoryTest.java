@@ -55,8 +55,6 @@ class TaskRepositoryTest {
             throw new ExceptionInInitializerError(ex);
         }
 
-        clearAllRepositories();
-
         taskRepository = new TaskRepository(new CrudRepository(sf));
 
         todoUserRepository = new TodoUserRepository(new CrudRepository(sf));
@@ -68,15 +66,16 @@ class TaskRepositoryTest {
         priority = priorityRepository.save(priorityNew);
 
         categoryRepository = new CategoryRepository(new CrudRepository(sf));
-        var categoryNew = new Category(1, "Здоровье");
+        var categoryNew = new Category(null, "Здоровье");
         category1 = categoryRepository.save(categoryNew);
-         categoryNew = new Category(2, "Саморазвитие");
+         categoryNew = new Category(null, "Саморазвитие");
         category2 = categoryRepository.save(categoryNew);
         categories = List.of(category1, category2);
     }
 
     @AfterAll
     public static void clearRepositories() {
+
         clearAllRepositories();
     }
 
@@ -89,7 +88,7 @@ class TaskRepositoryTest {
     @BeforeEach
     public void clearTasksBefore() {
 
-        clearTasks();
+       clearTasks();
     }
 
     private static void clearAllRepositories() {
