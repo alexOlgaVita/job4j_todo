@@ -58,11 +58,16 @@
 
         <div class="mb-3">
             <label for="priority"><b>Приоритет</b></label>
-            <select class="form-control" id="priority" name="priority.id">
+            <select class="form-control" id="priority" name="priority.id" th:required="true">
                 <option th:each="priority : ${priorities}" th:value="${priority.id}" th:text="${priority.name}"
                         th:selected="${priority.id==task.priority.id}">
                 </option>
             </select>
+        </div>
+
+        <div class="mb-3">
+            <input th:each="category:${categories}" name="taskCategories" type="checkbox" disabled th:value="${category.id}"
+                   th:checked="${#lists.contains(taskCategories, category.id)}" th:text="${category.name}">
         </div>
 
         <div class="mb-3 row">

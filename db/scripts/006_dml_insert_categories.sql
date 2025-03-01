@@ -1,0 +1,10 @@
+INSERT INTO categories (name) VALUES ('Домашние');
+INSERT INTO categories (name) VALUES ('Работа');
+INSERT INTO categories (name) VALUES ('Здоровье');
+INSERT INTO categories (name) VALUES ('Хобби');
+INSERT INTO categories (name) VALUES ('Саморазвитие');
+INSERT INTO categories (name) VALUES ('Личное');
+INSERT INTO categories (name) VALUES ('Семейное');
+INSERT INTO categories (name) VALUES ('Спорт');
+INSERT INTO categories (name) VALUES ('Отдых');
+INSERT INTO categories (name) VALUES ('Развлечения');

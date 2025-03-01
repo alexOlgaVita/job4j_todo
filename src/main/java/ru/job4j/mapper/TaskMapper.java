@@ -25,6 +25,7 @@ public interface TaskMapper {
             taskDto.setDone(task.isDone());
             taskDto.setTodoUser(task.getTodoUser());
             taskDto.setPriority(task.getPriority());
+            taskDto.setCategories(task.getCategories());
         } else {
             taskDto = null;
         }
@@ -41,6 +42,7 @@ public interface TaskMapper {
             task.setDone(taskDto.isDone());
             task.setTodoUser(taskDto.getTodoUser());
             task.setPriority(taskDto.getPriority());
+            task.setCategories(taskDto.getCategories());
         } else {
             task = null;
         }
@@ -50,7 +52,6 @@ public interface TaskMapper {
     private Date toDate(LocalDateTime localDateTime) {
         var instant = Timestamp.valueOf(localDateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))).toInstant();
         var date = Date.from(instant);
-        System.out.println(date);
         return date;
     }
 }

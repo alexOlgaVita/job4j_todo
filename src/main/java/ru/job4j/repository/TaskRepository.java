@@ -34,7 +34,9 @@ public class TaskRepository {
      */
     public boolean update(Task task) {
         return crudRepository.queryBoolean(
-                "UPDATE Task SET name = :fName, description = :fDescription, priority = :fPriority WHERE id = :fId",
+
+                "UPDATE Task SET name = :fName, description = :fDescription, priority = :fPriority"
+                        + "  WHERE id = :fId",
                 Map.of("fId", task.getId(), "fName", task.getName(),
                         "fDescription", task.getDescription(), "fPriority", task.getPriority()));
     }

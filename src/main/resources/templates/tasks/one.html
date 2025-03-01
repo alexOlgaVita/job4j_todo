@@ -15,6 +15,7 @@
                 <th scope="col">Готовность</th>
                 <th scope="col">Пользователь</th>
                 <th scope="col">Приоритет</th>
+                <th scope="col">Категории</th>
             </tr>
             </thead>
             <tbody>
@@ -30,6 +31,10 @@
                 </td>
                 <td th:text="*{todoUser.name}"/>
                 <td th:text="*{priority.name}"/>
+                <td>
+                    <input th:each="category:${categories}"  type="checkbox"  disabled th:value="${category.id}"
+                           th:checked="${#lists.contains(taskCategories, category.id)}" th:text="${category.name}">
+                </td>
             </tr>
         </table>
     </form>

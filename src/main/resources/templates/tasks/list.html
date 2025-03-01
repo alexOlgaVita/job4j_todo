@@ -45,6 +45,10 @@
                            th:href="@{/tasks/{id}(id=${task.id})}">
                         </a>
                     </td>
+                    <td>
+                        <input th:each="category:${categories}"  type="checkbox"  disabled th:value="${category.id}"
+                               th:checked="${#lists.contains(taskCategories, category.id)}" th:text="${category.name}">
+                    </td>
                 </tr>
                 </tbody>
             </table>

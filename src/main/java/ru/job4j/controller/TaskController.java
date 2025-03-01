@@ -3,13 +3,18 @@ package ru.job4j.controller;
 import net.jcip.annotations.ThreadSafe;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.job4j.dto.TaskDto;
+import ru.job4j.model.Category;
 import ru.job4j.model.TodoUser;
+import ru.job4j.service.category.CategoryService;
 import ru.job4j.service.priority.PriorityService;
 import ru.job4j.service.task.TaskService;
 
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.List;
 
 @ThreadSafe
 @Controller
@@ -19,10 +24,13 @@ public class TaskController {
     private final TaskService taskService;
     private final PriorityService priorityService;
 
-    public TaskController(TaskService taskService, PriorityService priorityService) {
+    private final CategoryService categoryService;
+
+    public TaskController(TaskService taskService, PriorityService priorityService, CategoryService categoryService) {
 
         this.taskService = taskService;
         this.priorityService = priorityService;
+        this.categoryService = categoryService;
     }
 
     @GetMapping
@@ -49,15 +57,21 @@ public class TaskController {
     @GetMapping("/create")
     public String getCreationPage(Model model) {
         model.addAttribute("priorities", priorityService.findAll());
+        model.addAttribute("categories", categoryService.findAll());
         return "tasks/create";
     }
 
     @PostMapping("/create")
-    public String create(@ModelAttribute TaskDto task, Model model, HttpSession session) {
+    public String create(@ModelAttribute TaskDto task,
+                         @RequestParam(value = "taskCategories", required = false) int[] taskCategories,
+                         BindingResult bindingResult, HttpSession session, Model model) {
         var user = (TodoUser) session.getAttribute("user");
         task.setTodoUser(user);
-        task.setPriority((task == null || task.getPriority() == null || task.getPriority().getName() == null)
-                ? null : priorityService.findById(task.getPriority().getId()).get());
+        task.setPriority(priorityService.findById(task.getPriority().getId()).get());
+        var categories = getCategoriesByIds(taskCategories);
+        if (!categories.isEmpty()) {
+            task.setCategories(categories);
+        }
         TaskDto createdTask = taskService.create(task);
         if (createdTask == null) {
             model.addAttribute("message", "Возникла ошибка при создании задания");
@@ -75,6 +89,9 @@ public class TaskController {
             model.addAttribute("message", "Задание с указанным идентификатором не найдено");
             return "errors/404";
         }
+        List<Category> categories = taskOptional.get().getCategories();
+        model.addAttribute("taskCategories", categories.stream().map(e -> e.getId()).toList());
+        model.addAttribute("categories", categoryService.findAll());
         model.addAttribute("task", taskOptional.get());
         return "tasks/one";
     }
@@ -99,16 +116,24 @@ public class TaskController {
             model.addAttribute("message", "Задание с указанным идентификатором не найдено");
             return "errors/404";
         }
+        List<Category> categories = taskOptional.get().getCategories();
+        model.addAttribute("taskCategories", categories.stream().map(e -> e.getId()).toList());
+        model.addAttribute("categories", categoryService.findAll());
         model.addAttribute("priorities", priorityService.findAll());
         model.addAttribute("task", taskOptional.get());
         return "tasks/oneEdit";
     }
 
     @PostMapping("/update/{id}")
-    public String update(@ModelAttribute TaskDto task, @PathVariable int id, Model model) {
+    public String update(@ModelAttribute TaskDto task,
+                         @RequestParam(value = "taskCategories", required = false) int[] taskCategories,
+                         BindingResult bindingResult, @PathVariable int id, Model model) {
         task.setName(task.getName().trim());
-        task.setPriority((task == null || task.getPriority() == null || task.getPriority().getName() == null)
-                ? null : priorityService.findById(task.getPriority().getId()).get());
+        task.setPriority(priorityService.findById(task.getPriority().getId()).get());
+        var categories = getCategoriesByIds(taskCategories);
+        if (!categories.isEmpty()) {
+            task.setCategories(categories);
+        }
         var isUpdated = taskService.update(task);
         if (!isUpdated) {
             model.addAttribute("message", "При обновленми задания с указанным идентификатором '"
@@ -128,5 +153,17 @@ public class TaskController {
             return "errors/404";
         }
         return "redirect:/tasks";
+    }
+
+    private List<Category> getCategoriesByIds(int[] taskCategories) {
+        List<Category> result = new ArrayList<>();
+        if (taskCategories != null) {
+            for (int i = 0; i < taskCategories.length; i++) {
+                if (categoryService.findById(taskCategories[i]).isPresent()) {
+                    result.add(categoryService.findById(taskCategories[i]).get());
+                }
+            }
+        }
+        return result;
     }
 }

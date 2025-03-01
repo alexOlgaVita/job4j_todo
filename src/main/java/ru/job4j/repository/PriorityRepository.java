@@ -40,7 +40,7 @@ public class PriorityRepository {
     /**
      * Список приоритетов, отсортированных по id.
      *
-     * @return список заданий.
+     * @return список приоритетов.
      */
     public List<Priority> findAll() {
         return crudRepository.query("from Priority order by id asc", Priority.class);
@@ -49,7 +49,7 @@ public class PriorityRepository {
     /**
      * Найти приоритет по ID
      *
-     * @return задание.
+     * @return приоритет.
      */
     public Optional<Priority> findById(int id) {
         return crudRepository.optional(
@@ -61,7 +61,7 @@ public class PriorityRepository {
      * Найти приоритет по name.
      *
      * @param name name.
-     * @return Optional or task.
+     * @return Optional or prioritety.
      */
     public Optional<Priority> findByName(String name) {
         return crudRepository.optional(
