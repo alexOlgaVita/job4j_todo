@@ -75,25 +75,6 @@ public class TodoUserController {
         return "redirect:/users/login";
     }
 
-    private List<TimeZone> getTimeZones0() {
-        var zones = new ArrayList<TimeZone>();
-        for (String timeId : TimeZone.getAvailableIDs()) {
-            zones.add(TimeZone.getTimeZone(timeId));
-        }
-        for (TimeZone zone : zones) {
-            System.out.println(zone.getID() + " : " + zone.getDisplayName());
-        }
-        return zones;
-    }
-
-    private List<String> getTimeZones1() {
-        var zones = new ArrayList<String>();
-        for (String timeId : TimeZone.getAvailableIDs()) {
-            zones.add(TimeZone.getTimeZone(timeId).getDisplayName());
-        }
-        return zones;
-    }
-
     private List<String> getTimeZones() {
         var zones = new ArrayList<String>();
         Set<String> timeIds = ZoneId.getAvailableZoneIds();
