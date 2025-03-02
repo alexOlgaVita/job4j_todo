@@ -14,6 +14,8 @@ import ru.job4j.service.task.TaskService;
 
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 @ThreadSafe
@@ -156,14 +158,7 @@ public class TaskController {
     }
 
     private List<Category> getCategoriesByIds(int[] taskCategories) {
-        List<Category> result = new ArrayList<>();
-        if (taskCategories != null) {
-            for (int i = 0; i < taskCategories.length; i++) {
-                if (categoryService.findById(taskCategories[i]).isPresent()) {
-                    result.add(categoryService.findById(taskCategories[i]).get());
-                }
-            }
-        }
-        return result;
+        Collection<Category> allCategories = categoryService.findAll();
+        return allCategories.stream().filter(e -> Arrays.asList(taskCategories).contains(e.getId())).toList();
     }
 }
