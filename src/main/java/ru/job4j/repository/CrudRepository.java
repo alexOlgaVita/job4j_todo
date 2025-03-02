@@ -111,7 +111,11 @@ public class CrudRepository {
             if (transaction != null) {
                 transaction.rollback();
             }
+            /*
+            Убираем исключение и просто возвращаем false, чтобы вернуть пользователю удобное сообщение
             throw e;
+            */
+            return false;
         } finally {
             session.close();
         }
