@@ -16,7 +16,11 @@ import ru.job4j.model.TodoUser;
 import ru.job4j.service.category.CategoryService;
 import ru.job4j.service.priority.PriorityService;
 import ru.job4j.service.task.TaskService;
+import ru.job4j.service.todouser.TodoUserService;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -34,14 +38,17 @@ class TasksControllerTest {
     private static final String date1 = "07.08.2025 06:00:01";
     private static final String date2 = "07.09.2025 06:00:01";
     private static final String date3 = "12.11.2025 15:03:02";
-    private static final TodoUser user = new TodoUser(null, "Ольга", "olga", "pass");
+    private static final TodoUser user = new TodoUser(null, "Ольга", "olga", "pass", "Europe/Paris");
     private static Priority priority = new Priority();
     private static List<Category> categories = new ArrayList<>();
     private TaskService taskService;
     private PriorityService priorityService;
     private CategoryService categoryService;
+    private TodoUserService todoUserService;
     private TaskController taskController;
     private MockHttpSession session;
+    private String zonedDateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss"));
+
     @Autowired
     private MockMvc mockMvc;
 
@@ -52,15 +59,18 @@ class TasksControllerTest {
         taskService = mock(TaskService.class);
         priorityService = mock(PriorityService.class);
         categoryService = mock(CategoryService.class);
-        taskController = new TaskController(taskService, priorityService, categoryService);
+        todoUserService = mock(TodoUserService.class);
+        taskController = new TaskController(taskService, priorityService, categoryService, todoUserService);
     }
 
     @Test
     public void whenRequestTaskAllListPageThenGetPageWithAllTasks() {
         var taskDto1 = new TaskDto(1, "Кино", "Сходить в кино с друзьями", getLocalDateTimeFromString(date1),
-                getDate(getLocalDateTimeFromString(date1)), false, user, priority, categories);
+                getDate(getLocalDateTimeFromString(date1)), false, user, priority, categories,
+                getLocalDateTimeFromString(date1).atZone(ZoneId.of(user.getTimezone())).format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss Z")));
         var taskDto2 = new TaskDto(2, "Прогулка", "Прогуляться по парку", getLocalDateTimeFromString(date2),
-                getDate(getLocalDateTimeFromString(date2)), true, user, priority, categories);
+                getDate(getLocalDateTimeFromString(date2)), true, user, priority, categories,
+                getLocalDateTimeFromString(date2).atZone(ZoneId.of(user.getTimezone())).format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss Z")));
         var expectedTasks = List.of(taskDto1, taskDto2);
         when(taskService.findAll()).thenReturn(expectedTasks);
 
@@ -75,11 +85,14 @@ class TasksControllerTest {
     @Test
     public void whenRequestTaskDoneListPageThenGetPageWitDoneTasks() {
         var taskDto1 = new TaskDto(1, "Кино", "Сходить в кино с друзьями", getLocalDateTimeFromString(date1),
-                getDate(getLocalDateTimeFromString(date1)), false, user, priority, categories);
+                getDate(getLocalDateTimeFromString(date1)), false, user, priority, categories,
+                getLocalDateTimeFromString(date1).atZone(ZoneId.of(user.getTimezone())).format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss Z")));
         var taskDto2 = new TaskDto(2, "Прогулка", "Прогуляться по парку", getLocalDateTimeFromString(date2),
-                getDate(getLocalDateTimeFromString(date2)), true, user, priority, categories);
+                getDate(getLocalDateTimeFromString(date2)), true, user, priority, categories,
+                getLocalDateTimeFromString(date2).atZone(ZoneId.of(user.getTimezone())).format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss Z")));
         var taskDto3 = new TaskDto(2, "Бадминтон", "Поиграть с другом в бадминтон", getLocalDateTimeFromString(date3),
-                getDate(getLocalDateTimeFromString(date3)), true, user, priority, categories);
+                getDate(getLocalDateTimeFromString(date3)), true, user, priority, categories,
+                getLocalDateTimeFromString(date3).atZone(ZoneId.of(user.getTimezone())).format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss Z")));
         var expectedTasks = List.of(taskDto2, taskDto3);
         when(taskService.findAllDone()).thenReturn(expectedTasks);
 
@@ -94,11 +107,14 @@ class TasksControllerTest {
     @Test
     public void whenRequestTaskNewListPageThenGetPageWitNewTasks() {
         var taskDto1 = new TaskDto(1, "Кино", "Сходить в кино с друзьями", getLocalDateTimeFromString(date1),
-                getDate(getLocalDateTimeFromString(date1)), false, user, priority, categories);
+                getDate(getLocalDateTimeFromString(date1)), false, user, priority, categories,
+                getLocalDateTimeFromString(date1).atZone(ZoneId.of(user.getTimezone())).format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss Z")));
         var taskDto2 = new TaskDto(2, "Прогулка", "Прогуляться по парку", getLocalDateTimeFromString(date2),
-                getDate(getLocalDateTimeFromString(date2)), true, user, priority, categories);
+                getDate(getLocalDateTimeFromString(date2)), true, user, priority, categories,
+                getLocalDateTimeFromString(date2).atZone(ZoneId.of(user.getTimezone())).format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss Z")));
         var taskDto3 = new TaskDto(2, "Бадминтон", "Поиграть с другом в бадминтон", getLocalDateTimeFromString(date3),
-                getDate(getLocalDateTimeFromString(date3)), false, user, priority, categories);
+                getDate(getLocalDateTimeFromString(date3)), false, user, priority, categories,
+                getLocalDateTimeFromString(date3).atZone(ZoneId.of(user.getTimezone())).format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss Z")));
         var expectedTasks = List.of(taskDto1, taskDto3);
         when(taskService.findAllNew()).thenReturn(expectedTasks);
 
@@ -130,7 +146,8 @@ class TasksControllerTest {
     @Test
     public void whenRequestTaskByIdPageThenGetPageWithTask() {
         var taskDto = new TaskDto(1, "Кино", "Сходить в кино с друзьями", getLocalDateTimeFromString(date1),
-                getDate(getLocalDateTimeFromString(date1)), false, user, priority, categories);
+                getDate(getLocalDateTimeFromString(date1)), false, user, priority, categories,
+                getLocalDateTimeFromString(date1).atZone(ZoneId.of(user.getTimezone())).format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss Z")));
         when(taskService.findById(taskDto.getId())).thenReturn(Optional.of(taskDto));
 
         var model = new ConcurrentModel();
@@ -144,7 +161,7 @@ class TasksControllerTest {
     @Test
     public void whenRequestDoDoneTaskByIdPageThenDoneAndToSuccessPage() {
         var taskDto1 = new TaskDto(1, "Кино", "Сходить в кино с друзьями", getLocalDateTimeFromString(date1),
-                getDate(getLocalDateTimeFromString(date1)), false, user, priority, categories);
+                getDate(getLocalDateTimeFromString(date1)), false, user, priority, categories, null);
         when(taskService.setDone(taskDto1.getId())).thenReturn(true);
 
         var model = new ConcurrentModel();

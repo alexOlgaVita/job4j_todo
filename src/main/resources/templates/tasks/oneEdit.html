@@ -39,7 +39,8 @@
         </div>
         <div class="mb-3">
             <label class="form-label"><b>Создана</b></label>
-            <div th:text="${#dates.format(task.createDate, 'dd.MM.yyyy HH:mm:ss')}">
+            <!--div th:text="${#dates.format(task.createDate, 'dd.MM.yyyy HH:mm:ss')}"-->
+            <div th:text="${task.zonedDateTime}">
             </div>
         </div>
         <div class="mb-3" th:switch="${task.done}">
@@ -66,7 +67,8 @@
         </div>
 
         <div class="mb-3">
-            <input th:each="category:${categories}" name="taskCategories" type="checkbox" disabled th:value="${category.id}"
+            <input th:each="category:${categories}" name="taskCategories" type="checkbox" disabled
+                   th:value="${category.id}"
                    th:checked="${#lists.contains(taskCategories, category.id)}" th:text="${category.name}">
         </div>
 

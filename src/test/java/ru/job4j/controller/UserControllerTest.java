@@ -27,7 +27,7 @@ class UserControllerTest {
 
     @Test
     public void whenRequestUserByIdPageThenGetPageWithUser() {
-        var user = new TodoUser(1, "OlgaI", "test1", "pass1");
+        var user = new TodoUser(1, "OlgaI", "test1", "pass1", null);
         when(userService.findByLogin(user.getLogin(), user.getPassword())).thenReturn(Optional.of(user));
 
         var model = new ConcurrentModel();
@@ -40,7 +40,7 @@ class UserControllerTest {
 
     @Test
     public void whenPostUserThenSameDataAndRedirectToStartPage() throws Exception {
-        var user = new TodoUser(1, "OlgaI", "test1", "pass1");
+        var user = new TodoUser(1, "OlgaI", "test1", "pass1", null);
         var userArgumentCaptor = ArgumentCaptor.forClass(TodoUser.class);
         when(userService.save(userArgumentCaptor.capture())).thenReturn(Optional.of(user));
 

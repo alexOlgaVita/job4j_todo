@@ -23,7 +23,8 @@
                 <td th:text="*{id}"/>
                 <td th:text="*{name}"/>
                 <td th:text="*{description}"/>
-                <td th:text="${#dates.format(task.createDate, 'dd.MM.yyyy HH:mm:ss')}"/>
+                <!--td th:text="${#dates.format(task.createDate, 'dd.MM.yyyy HH:mm:ss')}"/-->
+                <td th:text="${task.zonedDateTime}"/>
                 <td>
                     <label>
                         <input type="checkbox" disabled th:checked="*{done}"/>

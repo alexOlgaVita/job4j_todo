@@ -9,6 +9,8 @@ import ru.job4j.service.todouser.TodoUserService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.time.ZoneId;
+import java.util.*;
 
 @ThreadSafe
 @Controller
@@ -22,7 +24,9 @@ public class TodoUserController {
     }
 
     @GetMapping("/register")
-    public String getCreationPage() {
+    public String getCreationPage(Model model) {
+        model.addAttribute("userTimezoneDef", TimeZone.getDefault().getDisplayName());
+        model.addAttribute("timezones", getTimeZones());
         return "users/register";
     }
 
@@ -49,6 +53,7 @@ public class TodoUserController {
 
     @GetMapping("/login")
     public String getLoginPage() {
+
         return "users/login";
     }
 
@@ -68,5 +73,34 @@ public class TodoUserController {
     public String logout(HttpSession session) {
         session.invalidate();
         return "redirect:/users/login";
+    }
+
+    private List<TimeZone> getTimeZones0() {
+        var zones = new ArrayList<TimeZone>();
+        for (String timeId : TimeZone.getAvailableIDs()) {
+            zones.add(TimeZone.getTimeZone(timeId));
+        }
+        for (TimeZone zone : zones) {
+            System.out.println(zone.getID() + " : " + zone.getDisplayName());
+        }
+        return zones;
+    }
+
+    private List<String> getTimeZones1() {
+        var zones = new ArrayList<String>();
+        for (String timeId : TimeZone.getAvailableIDs()) {
+            zones.add(TimeZone.getTimeZone(timeId).getDisplayName());
+        }
+        return zones;
+    }
+
+    private List<String> getTimeZones() {
+        var zones = new ArrayList<String>();
+        Set<String> timeIds = ZoneId.getAvailableZoneIds();
+        Iterator<String> namesIterator = timeIds.iterator();
+        while (namesIterator.hasNext()) {
+            zones.add(namesIterator.next());
+        }
+        return zones.stream().sorted().toList();
     }
 }

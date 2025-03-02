@@ -58,4 +58,17 @@ public class TodoUserRepository {
                 Map.of("fLogin", login, "fPassword", password)
         );
     }
+
+    /**
+     * Найти пользователя по id.
+     *
+     * @param id id.
+     * @return Optional or user.
+     */
+    public Optional<TodoUser> findById(String id) {
+        return crudRepository.optional(
+                "from TodoUser where id = :fId", TodoUser.class,
+                Map.of("fId", id)
+        );
+    }
 }

@@ -6,6 +6,7 @@ import ru.job4j.mapper.TaskMapper;
 import ru.job4j.model.Task;
 import ru.job4j.repository.TaskRepository;
 
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -49,7 +50,12 @@ public class SimpleTaskService implements TaskService {
         List<TaskDto> result = new ArrayList<>();
         if (taskRepository.findAll() != null) {
             result = taskRepository.findAll().stream()
-                    .map(e -> taskMapper.getModelFromEntityCustom(e)).toList();
+                    .map(e -> taskMapper.getModelFromEntityCustom(e))
+                    .map(e -> new TaskDto(e.getId(), e.getName(), e.getDescription(),
+                            e.getCreated(),
+                            e.getCreateDate(), e.isDone(), e.getTodoUser(),
+                            e.getPriority(), e.getCategories(), null))
+                    .toList();
         }
         return result;
     }

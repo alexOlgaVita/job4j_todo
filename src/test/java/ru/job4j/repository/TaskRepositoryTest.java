@@ -58,7 +58,7 @@ class TaskRepositoryTest {
         taskRepository = new TaskRepository(new CrudRepository(sf));
 
         todoUserRepository = new TodoUserRepository(new CrudRepository(sf));
-        var user = new TodoUser(null, "Ольга", "olga", "pass");
+        var user = new TodoUser(null, "Ольга", "olga", "pass", null);
         userCreated = todoUserRepository.save(user);
 
         priorityRepository = new PriorityRepository(new CrudRepository(sf));

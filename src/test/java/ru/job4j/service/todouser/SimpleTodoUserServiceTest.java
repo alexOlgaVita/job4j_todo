@@ -16,7 +16,7 @@ class SimpleTodoUserServiceTest {
 
     @Test
     void whenSaveSuccessfullyWithMock() {
-        var user = new TodoUser(1, "OlgaI", "olga", "olgaPass");
+        var user = new TodoUser(1, "OlgaI", "olga", "olgaPass", null);
         TodoUserRepository userRepositoryMock = mock(TodoUserRepository.class);
         when(userRepositoryMock.save(user)).thenReturn(user);
         TodoUserService simpleUserService = new SimpleTodoUserService(userRepositoryMock);
@@ -26,7 +26,7 @@ class SimpleTodoUserServiceTest {
 
     @Test
     void whenSaveFailWithMock() {
-        var user = new TodoUser(1, "OlgaI", "olga", "olgaPass");
+        var user = new TodoUser(1, "OlgaI", "olga", "olgaPass", null);
         TodoUserRepository userRepositoryMock = mock(TodoUserRepository.class);
         when(userRepositoryMock.save(user)).thenReturn(null);
         TodoUserService simpleUserService = new SimpleTodoUserService(userRepositoryMock);
@@ -36,7 +36,7 @@ class SimpleTodoUserServiceTest {
 
     @Test
     void whenFindByLoginSuccessfullyWithMock() {
-        var user = new TodoUser(1, "OlgaI", "olga", "olgaPass");
+        var user = new TodoUser(1, "OlgaI", "olga", "olgaPass", null);
 
         TodoUserRepository userRepositoryMock = mock(TodoUserRepository.class);
         when(userRepositoryMock
@@ -51,7 +51,7 @@ class SimpleTodoUserServiceTest {
 
     @Test
     void whenFindByEmailAndPasswordFailWithMock() {
-        var user = new TodoUser(1, "OlgaI", "olga", "olgaPass");
+        var user = new TodoUser(1, "OlgaI", "olga", "olgaPass", null);
 
         TodoUserRepository userRepositoryMock = mock(TodoUserRepository.class);
         when(userRepositoryMock

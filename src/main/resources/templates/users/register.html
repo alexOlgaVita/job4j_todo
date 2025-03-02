@@ -21,6 +21,15 @@
             <label for="password" class="form-label"><b>Пароль</b></label>
             <input type="password" class="form-control" id="password" name="password" required pattern="\S(.*\S)?" title="Поле 'Пароль' is должно быть заполнено без ведущих и конечных пробелов">
         </div>
+        <div class="mb-3">
+            <label for="timezone"><b>Временная зона</b></label>
+            <select class="form-control" id="timezone" name="timezone" th:required="true">
+                <option th:each="timezone : ${timezones}" th:value="${timezone}"
+                        th:text="${timezone}"
+                        th:selected="${timezone==userTimezoneDef}">
+                </option>
+            </select>
+        </div>
         <div class="mb-3 row">
             <div class="col-6"></div>
             <div class="col-6">
