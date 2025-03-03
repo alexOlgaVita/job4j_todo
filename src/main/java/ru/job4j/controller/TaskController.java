@@ -16,12 +16,10 @@ import ru.job4j.service.todouser.TodoUserService;
 import javax.servlet.http.HttpSession;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
-
-import static ru.job4j.converter.ConverterDateTime.getDate;
+import java.util.Optional;
 
 @ThreadSafe
 @Controller
@@ -43,13 +41,7 @@ public class TaskController {
 
     @GetMapping
     public String getAll(Model model) {
-        Collection<TaskDto> allWithByTimeZone = taskService.findAll().stream().map(e -> new TaskDto(e.getId(), e.getName(), e.getDescription(),
-                e.getCreated(),
-                        e.getCreateDate(), e.isDone(), e.getTodoUser(),
-                e.getPriority(), e.getCategories(),
-                e.getCreated().atZone(ZoneId.of(e.getTodoUser().getTimezone())).format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss Z"))
-        )).toList();
-
+        Collection<TaskDto> allWithByTimeZone = getPreparedDataList(taskService.findAll());
         model.addAttribute("tasks", allWithByTimeZone);
         model.addAttribute("addVisible", true);
         return "tasks/list";
@@ -57,12 +49,7 @@ public class TaskController {
 
     @GetMapping("/done")
     public String getAllDone(Model model) {
-        Collection<TaskDto> allDoneWithByTimeZone = taskService.findAllDone().stream().map(e -> new TaskDto(e.getId(), e.getName(), e.getDescription(),
-                e.getCreated(),
-                e.getCreateDate(), e.isDone(), e.getTodoUser(),
-                e.getPriority(), e.getCategories(),
-                e.getCreated().atZone(ZoneId.of(e.getTodoUser().getTimezone())).format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss Z"))
-        )).toList();
+        Collection<TaskDto> allDoneWithByTimeZone = getPreparedDataList(taskService.findAllDone());
         model.addAttribute("tasks", allDoneWithByTimeZone);
         model.addAttribute("addVisible", false);
         return "tasks/list";
@@ -70,12 +57,7 @@ public class TaskController {
 
     @GetMapping("/new")
     public String getAllNew(Model model) {
-        Collection<TaskDto> allNewWithByTimeZone = taskService.findAllNew().stream().map(e -> new TaskDto(e.getId(), e.getName(), e.getDescription(),
-                e.getCreated(),
-                e.getCreateDate(), e.isDone(), e.getTodoUser(),
-                e.getPriority(), e.getCategories(),
-                e.getCreated().atZone(ZoneId.of(e.getTodoUser().getTimezone())).format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss Z"))
-        )).toList();
+        Collection<TaskDto> allNewWithByTimeZone = getPreparedDataList(taskService.findAllNew());
         model.addAttribute("tasks", allNewWithByTimeZone);
         model.addAttribute("addVisible", false);
         return "tasks/list";
@@ -90,15 +72,12 @@ public class TaskController {
 
     @PostMapping("/create")
     public String create(@ModelAttribute TaskDto task,
-                         @RequestParam(value = "taskCategories", required = false) int[] taskCategories,
-                         BindingResult bindingResult, HttpSession session, Model model) {
+                         @RequestParam(value = "ids", required = false) List<Integer> ids,
+                         HttpSession session, Model model) {
         var user = (TodoUser) session.getAttribute("user");
         task.setTodoUser(user);
         task.setPriority(priorityService.findById(task.getPriority().getId()).get());
-        var categories = getCategoriesByIds(taskCategories);
-        if (!categories.isEmpty()) {
-            task.setCategories(categories);
-        }
+        task.setCategories(new HashSet<Category>(categoryService.findByIds(ids)));
         TaskDto createdTask = taskService.create(task);
         if (createdTask == null) {
             model.addAttribute("message", "Возникла ошибка при создании задания");
@@ -116,17 +95,9 @@ public class TaskController {
             model.addAttribute("message", "Задание с указанным идентификатором не найдено");
             return "errors/404";
         }
-        List<Category> categories = taskOptional.get().getCategories();
-        model.addAttribute("taskCategories", categories.stream().map(e -> e.getId()).toList());
+        model.addAttribute("taskCategories", taskOptional.get().getCategories().stream().map(e -> e.getId()).toList());
         model.addAttribute("categories", categoryService.findAll());
-
-        TaskDto one  = List.of(taskOptional.get()).stream().map(e -> new TaskDto(e.getId(), e.getName(), e.getDescription(),
-                e.getCreated(),
-                e.getCreateDate(), e.isDone(), e.getTodoUser(),
-                e.getPriority(), e.getCategories(),
-                e.getCreated().atZone(ZoneId.of(e.getTodoUser().getTimezone())).format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss Z"))
-        )).toList().get(0);
-        model.addAttribute("task", one);
+        model.addAttribute("task", getPreparedDataOne(taskOptional));
         return "tasks/one";
     }
 
@@ -150,19 +121,10 @@ public class TaskController {
             model.addAttribute("message", "Задание с указанным идентификатором не найдено");
             return "errors/404";
         }
-
-        List<Category> categories = taskOptional.get().getCategories();
-        model.addAttribute("taskCategories", categories.stream().map(e -> e.getId()).toList());
+        model.addAttribute("taskCategories", taskOptional.get().getCategories().stream().map(e -> e.getId()).toList());
         model.addAttribute("categories", categoryService.findAll());
         model.addAttribute("priorities", priorityService.findAll());
-
-        TaskDto one  = List.of(taskOptional.get()).stream().map(e -> new TaskDto(e.getId(), e.getName(), e.getDescription(),
-                e.getCreated(),
-                e.getCreateDate(), e.isDone(), e.getTodoUser(),
-                e.getPriority(), e.getCategories(),
-                e.getCreated().atZone(ZoneId.of(e.getTodoUser().getTimezone())).format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss Z"))
-        )).toList().get(0);
-        model.addAttribute("task", one);
+        model.addAttribute("task", getPreparedDataOne(taskOptional));
         return "tasks/oneEdit";
     }
 
@@ -172,10 +134,6 @@ public class TaskController {
                          BindingResult bindingResult, @PathVariable int id, Model model) {
         task.setName(task.getName().trim());
         task.setPriority(priorityService.findById(task.getPriority().getId()).get());
-        var categories = getCategoriesByIds(taskCategories);
-        if (!categories.isEmpty()) {
-            task.setCategories(categories);
-        }
         var isUpdated = taskService.update(task);
         if (!isUpdated) {
             model.addAttribute("message", "При обновленми задания с указанным идентификатором '"
@@ -197,12 +155,21 @@ public class TaskController {
         return "redirect:/tasks";
     }
 
-    private List<Category> getCategoriesByIds(int[] taskCategories) {
-        Collection<Category> allCategories = categoryService.findAll();
-        List<Integer> taskList = new ArrayList<>();
-        for (int i = 0; i < taskCategories.length;  i++) {
-            taskList.add(taskCategories[i]);
-        }
-        return allCategories.stream().filter(e -> taskList.contains(e.getId())).toList();
+    private TaskDto getPreparedDataOne(Optional<TaskDto> taskOptional) {
+        return List.of(taskOptional.get()).stream().map(e -> new TaskDto(e.getId(), e.getName(), e.getDescription(),
+                e.getCreated(),
+                e.getCreateDate(), e.isDone(), e.getTodoUser(),
+                e.getPriority(), e.getCategories(),
+                e.getCreated().atZone(ZoneId.of(e.getTodoUser().getTimezone())).format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss Z"))
+        )).toList().get(0);
+    }
+
+    private List<TaskDto> getPreparedDataList(Collection<TaskDto> list) {
+        return list.stream().map(e -> new TaskDto(e.getId(), e.getName(), e.getDescription(),
+                e.getCreated(),
+                e.getCreateDate(), e.isDone(), e.getTodoUser(),
+                e.getPriority(), e.getCategories(),
+                e.getCreated().atZone(ZoneId.of(e.getTodoUser().getTimezone())).format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss Z"))
+        )).toList();
     }
 }

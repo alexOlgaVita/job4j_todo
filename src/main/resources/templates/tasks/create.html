@@ -25,10 +25,17 @@
         </div>
 
         <div class="mb-3">
-            <th:block th:each="category : ${categories}">
-                <input type="checkbox" name="taskCategories" th:value="${category.id}"/>
+
+            <!--th:block th:each="category : ${categories}">
+                <УБРАТЬ input type="checkbox" name="taskCategories" th:value="${category.id}"/>
+                <input type="hidden" name="category.name" th:value="${category.name}"/>
+                <input type="checkbox" name="taskCategories" th:value="${category}"/>
                 <label th:text="${category.name}"></label>
-            </th:block>
+            </th:block -->
+                <th:block th:each="category : ${categories}">
+                    <input  type="checkbox" name="ids" th:value="${category.id}"/>
+                    <label th:text="${category.name}"></label>
+                </th:block>
         </div>
 
         <div class="mb-3 row">

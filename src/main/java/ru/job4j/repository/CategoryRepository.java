@@ -68,4 +68,15 @@ public class CategoryRepository {
                 "from Category where name = :fName", Category.class, Map.of("fName", name)
         );
     }
+
+    /**
+     * Найти категории по ids.
+     *
+     * @param ids ids.
+     * @return Optional or category.
+     */
+    public List<Category> findByIds(List<Integer> ids) {
+        return crudRepository.query("from Category where id in (:fIds) order by id asc", Category.class,
+                Map.of("fIds", ids));
+    }
 }

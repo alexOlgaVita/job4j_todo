@@ -4,9 +4,9 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 import static java.time.LocalDateTime.now;
 import static ru.job4j.converter.ConverterDateTime.FORMATTER;
@@ -43,7 +43,7 @@ public class Task {
             joinColumns = {@JoinColumn(name = "task_id")},
             inverseJoinColumns = {@JoinColumn(name = "category_id")}
     )
-    private List<Category> categories = new ArrayList<>();
+    private Set<Category> categories = new HashSet<>();
 
     @Override
     public String toString() {

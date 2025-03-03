@@ -7,9 +7,8 @@ import ru.job4j.model.Priority;
 import ru.job4j.model.TodoUser;
 
 import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
 import java.util.Date;
-import java.util.List;
+import java.util.Set;
 
 import static java.time.LocalDateTime.now;
 
@@ -25,11 +24,12 @@ public class TaskDto {
     private Date createDate = new Date(System.currentTimeMillis());
     private TodoUser todoUser;
     private Priority priority;
-    private List<Category> categories;
+    private Set<Category> categories;
     private String zonedDateTime;
 
     public TaskDto(int id, String name, String description, LocalDateTime created, Date createDate,
-                   boolean done, TodoUser todoUser, Priority priority, List<Category> categories,
+                   boolean done, TodoUser todoUser, Priority priority,
+                   Set<Category> categories,
                    String zonedDateTime) {
         this.id = id;
         this.name = name;

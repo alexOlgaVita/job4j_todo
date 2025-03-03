@@ -3,6 +3,7 @@ package ru.job4j.service.category;
 import ru.job4j.model.Category;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 public interface CategoryService {
@@ -12,4 +13,6 @@ public interface CategoryService {
     Optional<Category> findById(int id);
 
     Optional<Category> findByName(String name);
+
+    List<Category> findByIds(List<Integer> ids);
 }

@@ -10,9 +10,10 @@ import ru.job4j.model.Priority;
 import ru.job4j.model.TodoUser;
 import ru.job4j.repository.TaskRepository;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
@@ -26,7 +27,7 @@ class SimpleTaskServiceTest {
     private static final String date1 = "07.08.2025 06:00:01";
     private static final TodoUser user = new TodoUser(null, "Ольга", "olga", "pass", null);
     private static Priority priority = new Priority();
-    private static List<Category> categories = new ArrayList<>();
+    private static Set<Category> categories = new HashSet<>();
     private static TodoUser todouser = new TodoUser();
 
     @Autowired
