@@ -21,9 +21,10 @@ import ru.job4j.service.todouser.TodoUserService;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
@@ -40,7 +41,7 @@ class TasksControllerTest {
     private static final String date3 = "12.11.2025 15:03:02";
     private static final TodoUser user = new TodoUser(null, "Ольга", "olga", "pass", "Europe/Paris");
     private static Priority priority = new Priority();
-    private static List<Category> categories = new ArrayList<>();
+    private static Set<Category> categories = new HashSet<>();
     private TaskService taskService;
     private PriorityService priorityService;
     private CategoryService categoryService;

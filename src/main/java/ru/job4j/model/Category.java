@@ -22,6 +22,12 @@ public class Category {
 
     private String name;
 
+    /*
+    @ManyToMany(mappedBy = "categories", fetch = FetchType.LAZY)
+    @JsonIgnoreProperties("categories")
+    private Set<Task> tasks = new HashSet<>();
+     */
+
     @Override
     public String toString() {
         return this.name;

@@ -67,6 +67,7 @@ public class TaskRepository {
      */
     public List<Task> findAll() {
         return crudRepository.query("from Task f JOIN FETCH f.priority order by f.id asc", Task.class);
+        //return crudRepository.query("from Task f JOIN FETCH f.priority, Category c WHERE c.id in f.categories", Task.class);
     }
 
     /**

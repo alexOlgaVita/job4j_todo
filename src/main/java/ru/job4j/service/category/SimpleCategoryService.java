@@ -5,6 +5,7 @@ import ru.job4j.model.Category;
 import ru.job4j.repository.CategoryRepository;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -29,5 +30,10 @@ public class SimpleCategoryService implements CategoryService {
     @Override
     public Optional<Category> findByName(String name) {
         return categoryRepository.findByName(name);
+    }
+
+    @Override
+    public List<Category> findByIds(List<Integer> ids) {
+        return categoryRepository.findByIds(ids);
     }
 }
